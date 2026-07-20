@@ -96,6 +96,25 @@
     return '$' + amount.toFixed(2);
   }
 
+  function buildWhatsAppOrderUrl(orderDetails) {
+    var config = window.SiteConfig || { whatsapp: '923211234567' };
+    var lines = ['New order - Dollars Food'];
+    if (orderDetails.name) lines.push('Name: ' + orderDetails.name);
+    if (orderDetails.phone) lines.push('Phone: ' + orderDetails.phone);
+    if (orderDetails.address) lines.push('Address: ' + orderDetails.address);
+    lines.push('Payment: Cash on Delivery');
+    if (orderDetails.items && orderDetails.items.length) {
+      lines.push('Items:');
+      orderDetails.items.forEach(function (item) {
+        lines.push('- ' + item.name + ' x' + item.quantity + ' (' + formatPrice(item.price * item.quantity) + ')');
+      });
+    }
+    if (orderDetails.total !== undefined) {
+      lines.push('Total: ' + formatPrice(orderDetails.total));
+    }
+    return 'https://wa.me/' + config.whatsapp + '?text=' + encodeURIComponent(lines.join('\n'));
+  }
+
   function bindAddToCartButtons() {
     document.querySelectorAll('[data-add-to-cart]').forEach(function (button) {
       button.addEventListener('click', function () {
@@ -238,6 +257,7 @@
     clearCart: clearCart,
     updateCartBadges: updateCartBadges,
     formatPrice: formatPrice,
+    buildWhatsAppOrderUrl: buildWhatsAppOrderUrl,
     bindAddToCartButtons: bindAddToCartButtons,
     renderCartPage: renderCartPage,
     renderCheckoutSummary: renderCheckoutSummary
