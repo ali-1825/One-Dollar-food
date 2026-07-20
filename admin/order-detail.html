@@ -5,7 +5,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Order Details | DOLLARS FOOD</title>
 <link href="../perf.css" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Poppins:wght@400;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet"/>
 <script>
 tailwind.config = {
@@ -14,7 +14,9 @@ tailwind.config = {
       colors: {
         'border-black': '#241608',
         'background-cream': '#FFF6E5',
-        'primary': '#bb152c'
+        'primary': '#bb152c',
+        'tertiary': '#006a35',
+        'error': '#ba1a1a'
       },
       fontFamily: {
         display: ['"Bricolage Grotesque"', 'sans-serif'],
@@ -58,18 +60,34 @@ tailwind.config = {
 <div><p class="font-mono text-xs uppercase">Final Total</p><p class="font-display text-xl" id="detail-total"></p></div>
 <div><p class="font-mono text-xs uppercase">Payment Method</p><p id="detail-payment"></p></div>
 </div>
+<div class="grid md:grid-cols-2 gap-4">
 <div><p class="font-mono text-xs uppercase">Customer Notes</p><p id="detail-notes"></p></div>
-<div><p class="font-mono text-xs uppercase">Status</p><p class="uppercase" id="detail-status-value"></p></div>
+<div><p class="font-mono text-xs uppercase">Source</p><p id="detail-source"></p></div>
+</div>
+<div class="border-t border-neutral-200 pt-4">
+<p class="font-mono text-xs uppercase mb-2">Order Status</p>
+<div class="flex flex-col sm:flex-row gap-3 sm:items-end">
+<select class="border-[3px] border-border-black p-3 bg-background-cream" id="status-select">
+<option value="received">Received</option>
+<option value="confirmed">Confirmed</option>
+<option value="cancelled">Cancelled</option>
+</select>
+<button class="border-[3px] border-border-black px-4 py-3 font-mono text-xs uppercase bg-primary text-white" id="status-save" type="button">Update Status</button>
+</div>
+<p aria-live="polite" class="text-sm mt-3 min-h-[20px]" id="status-update-message" role="status"></p>
+</div>
 <div class="grid md:grid-cols-2 gap-4 border-t border-neutral-200 pt-4">
 <div>
 <p class="font-mono text-xs uppercase">Business WhatsApp</p>
 <p id="detail-business-result"></p>
 <p class="text-xs mt-1" id="detail-business-id"></p>
+<p class="text-xs mt-1 text-neutral-600" id="detail-business-error"></p>
 </div>
 <div>
 <p class="font-mono text-xs uppercase">Customer WhatsApp</p>
 <p id="detail-customer-result"></p>
 <p class="text-xs mt-1" id="detail-customer-id"></p>
+<p class="text-xs mt-1 text-neutral-600" id="detail-customer-error"></p>
 </div>
 </div>
 </section>
@@ -80,6 +98,8 @@ tailwind.config = {
   var admin = window.DollarsFoodAdmin;
   var detailStatus = document.getElementById('detail-status');
   var detailSection = document.getElementById('order-detail');
+  var statusUpdateMessage = document.getElementById('status-update-message');
+  var currentOrderId = '';
 
   function getOrderIdFromPath() {
     var parts = window.location.pathname.split('/').filter(Boolean);
@@ -87,11 +107,20 @@ tailwind.config = {
   }
 
   function renderNotification(prefix, notification) {
-    admin.setText(document.getElementById(prefix + '-result'), notification.success ? 'Sent successfully' : (notification.error || 'Delivery failed'));
-    admin.setText(document.getElementById(prefix + '-id'), notification.providerMessageId ? 'Message ID: ' + notification.providerMessageId : '');
+    var status = admin.resolveNotificationStatus(notification);
+    admin.setText(document.getElementById(prefix + '-result'), admin.notificationLabel(status));
+    admin.setText(
+      document.getElementById(prefix + '-id'),
+      notification.providerMessageId ? 'Message ID: ' + notification.providerMessageId : ''
+    );
+    admin.setText(
+      document.getElementById(prefix + '-error'),
+      status === 'failed' && notification.error ? notification.error : ''
+    );
   }
 
   function renderOrder(order) {
+    currentOrderId = order.id;
     admin.setText(document.getElementById('detail-id'), order.id);
     admin.setText(document.getElementById('detail-created'), admin.formatDate(order.createdAt));
     admin.setText(document.getElementById('detail-customer'), order.customer.name);
@@ -112,7 +141,8 @@ tailwind.config = {
     admin.setText(document.getElementById('detail-total'), admin.formatMoney(order.total));
     admin.setText(document.getElementById('detail-payment'), order.paymentMethod);
     admin.setText(document.getElementById('detail-notes'), order.notes || 'None');
-    admin.setText(document.getElementById('detail-status-value'), order.status);
+    admin.setText(document.getElementById('detail-source'), order.source);
+    document.getElementById('status-select').value = order.status;
     renderNotification('detail-business', order.notifications.business);
     renderNotification('detail-customer', order.notifications.customer);
     detailSection.classList.remove('hidden');
@@ -141,6 +171,28 @@ tailwind.config = {
     renderOrder(result.data.order);
     admin.setText(detailStatus, '');
   }
+
+  document.getElementById('status-save').addEventListener('click', async function () {
+    if (!currentOrderId) return;
+
+    admin.setText(statusUpdateMessage, 'Updating status...');
+    var result = await admin.patchJson('/api/admin/orders/' + encodeURIComponent(currentOrderId), {
+      status: document.getElementById('status-select').value
+    });
+
+    if (result.status === 401) {
+      window.location.href = '/admin/login';
+      return;
+    }
+
+    if (!result.ok || !result.data.success) {
+      admin.setText(statusUpdateMessage, result.data.error || 'Could not update order status.');
+      return;
+    }
+
+    renderOrder(result.data.order);
+    admin.setText(statusUpdateMessage, 'Order status updated successfully.');
+  });
 
   document.getElementById('logout-btn').addEventListener('click', async function () {
     await admin.postJson('/api/admin/logout', {});

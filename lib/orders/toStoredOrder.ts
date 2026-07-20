@@ -1,5 +1,6 @@
 import type { OrderSource } from '../types/stored-order';
 import type { StoredOrder } from '../types/stored-order';
+import { createNotConfiguredNotification } from '../types/stored-order';
 import type { ValidatedOrder } from '../types/order';
 
 export function toStoredOrder(
@@ -38,8 +39,8 @@ export function toStoredOrder(
     status: 'received',
     source,
     notifications: {
-      business: { success: false },
-      customer: { success: false }
+      business: createNotConfiguredNotification(),
+      customer: createNotConfiguredNotification()
     }
   };
 }

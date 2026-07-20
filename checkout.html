@@ -292,7 +292,14 @@
 
         function setOrderStatus(message, type) {
             orderStatus.textContent = message || '';
-            orderStatus.className = 'mt-4 text-center font-body-md ' + (type === 'error' ? 'text-error' : type === 'success' ? 'text-tertiary' : 'text-on-surface-variant');
+            orderStatus.className = 'mt-4 text-center font-body-md whitespace-pre-line ' + (type === 'error' ? 'text-error' : type === 'success' ? 'text-tertiary' : 'text-on-surface-variant');
+        }
+
+        function showOrderConfirmation(orderId) {
+            setOrderStatus(
+                'Order received\n\nYour order number is ' + orderId + '.\nThe restaurant will contact you to confirm your order.',
+                'success'
+            );
         }
 
         confirmBtn.addEventListener('mousedown', () => {
@@ -355,11 +362,11 @@
             }, { clearCart: false }).then(function (result) {
                 if (result.success) {
                     cartApi.clearCart();
-                    setOrderStatus(result.message + ' Order ID: ' + result.orderId, 'success');
+                    showOrderConfirmation(result.orderId);
                     confirmBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span> ORDER RECEIVED</span>';
                     setTimeout(function () {
                         window.location.href = 'Main Page.html';
-                    }, 1800);
+                    }, 2500);
                     return;
                 }
 

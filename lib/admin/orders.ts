@@ -1,4 +1,5 @@
-import type { StoredOrder } from '../types/stored-order';
+import type { StoredOrder, OrderStatus } from '../types/stored-order';
+import { resolveNotificationStatus } from '../types/stored-order';
 
 export interface AdminOrderSummary {
   id: string;
@@ -10,8 +11,33 @@ export interface AdminOrderSummary {
   total: number;
   paymentMethod: string;
   status: StoredOrder['status'];
-  businessWhatsApp: boolean;
-  customerWhatsApp: boolean;
+  businessNotification: string;
+  customerNotification: string;
+}
+
+const ORDER_STATUSES: OrderStatus[] = ['received', 'confirmed', 'cancelled'];
+
+export function isValidOrderStatus(value: string): value is OrderStatus {
+  return ORDER_STATUSES.includes(value as OrderStatus);
+}
+
+export function notificationLabel(status: string): string {
+  if (status === 'sent') {
+    return 'Sent';
+  }
+
+  if (status === 'not_configured') {
+    return 'Not configured';
+  }
+
+  return 'Failed';
+}
+
+export function orderRequiresAttention(order: StoredOrder): boolean {
+  return (
+    resolveNotificationStatus(order.notifications.business) === 'failed' ||
+    resolveNotificationStatus(order.notifications.customer) === 'failed'
+  );
 }
 
 export function toAdminOrderSummary(order: StoredOrder): AdminOrderSummary {
@@ -33,8 +59,8 @@ export function toAdminOrderSummary(order: StoredOrder): AdminOrderSummary {
     total: order.total,
     paymentMethod: order.paymentMethod,
     status: order.status,
-    businessWhatsApp: order.notifications.business.success,
-    customerWhatsApp: order.notifications.customer.success
+    businessNotification: notificationLabel(resolveNotificationStatus(order.notifications.business)),
+    customerNotification: notificationLabel(resolveNotificationStatus(order.notifications.customer))
   };
 }
 
@@ -71,7 +97,7 @@ export function summarizeOrders(orders: StoredOrder[]): {
   totalOrders: number;
   ordersToday: number;
   totalValue: number;
-  whatsAppFailures: number;
+  ordersRequiringAttention: number;
 } {
   const today = new Date().toISOString().slice(0, 10);
 
@@ -84,8 +110,8 @@ export function summarizeOrders(orders: StoredOrder[]): {
         summary.ordersToday += 1;
       }
 
-      if (!order.notifications.business.success || !order.notifications.customer.success) {
-        summary.whatsAppFailures += 1;
+      if (orderRequiresAttention(order)) {
+        summary.ordersRequiringAttention += 1;
       }
 
       return summary;
@@ -94,7 +120,7 @@ export function summarizeOrders(orders: StoredOrder[]): {
       totalOrders: 0,
       ordersToday: 0,
       totalValue: 0,
-      whatsAppFailures: 0
+      ordersRequiringAttention: 0
     }
   );
 }

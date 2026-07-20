@@ -33,8 +33,8 @@ function buildOrder(id: string): StoredOrder {
     status: 'received',
     source: 'checkout',
     notifications: {
-      business: { success: false, error: 'failed' },
-      customer: { success: false, error: 'failed' }
+      business: { status: 'failed', error: 'failed' },
+      customer: { status: 'failed', error: 'failed' }
     }
   };
 }
@@ -75,11 +75,11 @@ test('failed WhatsApp notifications do not remove saved orders', async function 
   const order = buildOrder('ORD-20260720-TEST02');
   await saveOrder(order);
 
-  order.notifications.business.success = false;
-  order.notifications.customer.success = false;
+  order.notifications.business = { status: 'failed', error: 'failed' };
+  order.notifications.customer = { status: 'failed', error: 'failed' };
   await updateOrder(order);
 
   const saved = await getOrderById(order.id);
   assert.ok(saved);
-  assert.equal(saved.notifications.business.success, false);
+  assert.equal(saved.notifications.business.status, 'failed');
 });

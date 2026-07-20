@@ -1,3 +1,5 @@
+export type NotificationStatus = 'sent' | 'failed' | 'not_configured';
+
 export type OrderStatus = 'received' | 'confirmed' | 'cancelled';
 
 export type OrderSource = 'checkout' | 'home-form';
@@ -11,7 +13,7 @@ export interface StoredOrderItem {
 }
 
 export interface NotificationResult {
-  success: boolean;
+  status: NotificationStatus;
   providerMessageId?: string;
   error?: string;
 }
@@ -36,5 +38,31 @@ export interface StoredOrder {
   notifications: {
     business: NotificationResult;
     customer: NotificationResult;
+  };
+}
+
+export function resolveNotificationStatus(notification: NotificationResult): NotificationStatus {
+  if (notification.status) {
+    return notification.status;
+  }
+
+  return 'failed';
+}
+
+export function createNotConfiguredNotification(): NotificationResult {
+  return { status: 'not_configured' };
+}
+
+export function createSentNotification(providerMessageId?: string): NotificationResult {
+  return {
+    status: 'sent',
+    providerMessageId
+  };
+}
+
+export function createFailedNotification(error?: string): NotificationResult {
+  return {
+    status: 'failed',
+    error: error || 'Delivery failed.'
   };
 }

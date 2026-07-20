@@ -69,6 +69,8 @@ export function validateAdminCredentials(username: string, password: string): bo
     if (username === 'admin' && password === 'admin') {
       return configuredUsername === 'admin' && configuredPassword === 'admin';
     }
+  } else if (username === 'admin' && password === 'admin') {
+    return false;
   }
 
   return safeCompare(username, configuredUsername) && safeCompare(password, configuredPassword);

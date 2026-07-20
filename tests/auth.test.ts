@@ -69,6 +69,23 @@ test('production storage uses blob mode when configured', function () {
   assert.equal(getStorageMode(), 'local');
 });
 
+test('admin/admin is rejected when ALLOW_INSECURE_ADMIN=false', function () {
+  process.env.ADMIN_USERNAME = 'admin';
+  process.env.ADMIN_PASSWORD = 'admin';
+  process.env.ALLOW_INSECURE_ADMIN = 'false';
+
+  assert.equal(validateAdminCredentials('admin', 'admin'), false);
+});
+
+test('configured production credentials work when insecure mode is disabled', function () {
+  process.env.ADMIN_USERNAME = 'dashboard-admin';
+  process.env.ADMIN_PASSWORD = 'StrongPassword123!';
+  process.env.ALLOW_INSECURE_ADMIN = 'false';
+
+  assert.equal(validateAdminCredentials('dashboard-admin', 'StrongPassword123!'), true);
+  assert.equal(validateAdminCredentials('admin', 'admin'), false);
+});
+
 test('order listing shape does not expose secrets', function () {
   const order = {
     id: 'ORD-20260720-TEST03',
@@ -83,8 +100,8 @@ test('order listing shape does not expose secrets', function () {
     status: 'received' as const,
     source: 'checkout' as const,
     notifications: {
-      business: { success: true, providerMessageId: 'wamid.test' },
-      customer: { success: false, error: 'Template failed' }
+      business: { status: 'not_configured' as const },
+      customer: { status: 'not_configured' as const }
     }
   };
 

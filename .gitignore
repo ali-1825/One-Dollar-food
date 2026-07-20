@@ -3,6 +3,7 @@ node_modules/
 .env
 .env.local
 .env.production.local
+.tmp-admin-verify.env
 .data/
 .DS_Store
 Thumbs.db
