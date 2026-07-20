@@ -10,12 +10,5 @@
     { "source": "/admin/login", "destination": "/admin/login.html" },
     { "source": "/admin/orders", "destination": "/admin/orders.html" },
     { "source": "/admin/orders/:orderId", "destination": "/admin/order-detail.html" }
-  ],
-  "redirects": [
-    { "source": "/Main Page.html", "destination": "/", "permanent": true },
-    { "source": "/Full menu.html", "destination": "/menu", "permanent": true },
-    { "source": "/cart.html", "destination": "/stash", "permanent": true },
-    { "source": "/checkout.html", "destination": "/checkout", "permanent": true },
-    { "source": "/Detail.html", "destination": "/detail", "permanent": true }
   ]
 }
