@@ -1,5 +1,6 @@
 (function () {
   const CART_KEY = 'dollarsFoodCart';
+  const LAST_ORDER_KEY = 'dollarsFoodLastOrder';
   const PLACEHOLDER_IMAGE =
     'data:image/svg+xml,' +
     encodeURIComponent(
@@ -106,6 +107,48 @@
     saveCart([]);
   }
 
+  function saveLastOrder(order) {
+    if (!order || !order.id) return;
+    localStorage.setItem(LAST_ORDER_KEY, JSON.stringify(order));
+  }
+
+  function getOrderDetailUrl(orderId) {
+    var base = window.location.protocol === 'file:' ? 'order detail.html' : '/order';
+    return base + '?id=' + encodeURIComponent(orderId);
+  }
+
+  function buildLastOrderSnapshot(orderId, orderDetails, status) {
+    var items = (orderDetails.items || []).map(function (item) {
+      var qty = item.quantity || 1;
+      var unitPrice = item.price != null ? item.price : item.unitPrice || 1;
+      return {
+        id: item.id,
+        name: item.name,
+        quantity: qty,
+        price: unitPrice,
+        lineTotal: unitPrice * qty,
+        image: item.image || ''
+      };
+    });
+
+    var total = orderDetails.total != null
+      ? orderDetails.total
+      : items.reduce(function (sum, item) {
+          return sum + item.lineTotal;
+        }, 0);
+
+    return {
+      id: orderId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      status: status || 'received',
+      address: orderDetails.address || '',
+      paymentMethod: orderDetails.paymentMethod || 'Cash on Delivery',
+      items: items,
+      total: total
+    };
+  }
+
   function updateCartBadges() {
     var count = getCartCount();
     document.querySelectorAll('[data-cart-count]').forEach(function (el) {
@@ -206,6 +249,11 @@
       })
       .then(function (result) {
         if (result.ok && result.data.success) {
+          if (result.data.orderId) {
+            saveLastOrder(
+              buildLastOrderSnapshot(result.data.orderId, orderDetails, 'received')
+            );
+          }
           if (options.clearCart !== false) {
             clearCart();
           }
@@ -429,6 +477,9 @@
     updateQuantity: updateQuantity,
     removeFromCart: removeFromCart,
     clearCart: clearCart,
+    saveLastOrder: saveLastOrder,
+    getOrderDetailUrl: getOrderDetailUrl,
+    buildLastOrderSnapshot: buildLastOrderSnapshot,
     updateCartBadges: updateCartBadges,
     formatPrice: formatPrice,
     buildOrderMessage: buildOrderMessage,

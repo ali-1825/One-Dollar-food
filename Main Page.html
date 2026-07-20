@@ -502,8 +502,8 @@
                     if (cart.length) cartApi.clearCart();
                     showOrderConfirmation(result.orderId);
                     setTimeout(function () {
-                        window.location.href = 'Main Page.html';
-                    }, 2500);
+                        window.location.href = cartApi.getOrderDetailUrl(result.orderId);
+                    }, 1500);
                     return;
                 }
 

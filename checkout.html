@@ -356,8 +356,8 @@
                     showOrderConfirmation(result.orderId);
                     confirmBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span> ORDER RECEIVED</span>';
                     setTimeout(function () {
-                        window.location.href = 'Main Page.html';
-                    }, 2500);
+                        window.location.href = cartApi.getOrderDetailUrl(result.orderId);
+                    }, 1500);
                     return;
                 }
 

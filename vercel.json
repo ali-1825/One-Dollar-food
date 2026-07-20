@@ -7,6 +7,7 @@
     { "source": "/detail", "destination": "/Detail.html" },
     { "source": "/stash", "destination": "/cart.html" },
     { "source": "/checkout", "destination": "/checkout.html" },
+    { "source": "/order", "destination": "/order detail.html" },
     { "source": "/admin/login", "destination": "/admin/login.html" },
     { "source": "/admin/orders", "destination": "/admin/orders.html" },
     { "source": "/admin/orders/:orderId", "destination": "/admin/order-detail.html" }
