@@ -27,7 +27,8 @@ export async function saveOrderBlob(order: StoredOrder): Promise<StoredOrder> {
   await put(pathname, JSON.stringify(order), {
     access: 'private',
     contentType: 'application/json',
-    addRandomSuffix: false
+    addRandomSuffix: false,
+    allowOverwrite: true
   });
 
   return order;
