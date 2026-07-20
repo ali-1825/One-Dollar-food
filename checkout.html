@@ -173,16 +173,16 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 <div class="flex flex-col gap-2">
 <label class="font-label-mono text-label-mono uppercase">First Name</label>
-<input class="bg-background-cream border-3 border-border-black p-3 font-body-md focus:shadow-none transition-all" placeholder="Gamer" type="text"/>
+<input class="bg-background-cream border-3 border-border-black p-3 font-body-md focus:shadow-none transition-all" id="checkout-first-name" placeholder="Ali" type="text"/>
 </div>
 <div class="flex flex-col gap-2">
 <label class="font-label-mono text-label-mono uppercase">Last Name</label>
-<input class="bg-background-cream border-3 border-border-black p-3 font-body-md focus:shadow-none transition-all" placeholder="Tag" type="text"/>
+<input class="bg-background-cream border-3 border-border-black p-3 font-body-md focus:shadow-none transition-all" id="checkout-last-name" placeholder="Ahmed" type="text"/>
 </div>
 </div>
 <div class="flex flex-col gap-2">
 <label class="font-label-mono text-label-mono uppercase">Street Address</label>
-<input class="bg-background-cream border-3 border-border-black p-3 font-body-md focus:shadow-none transition-all" placeholder="123 Digital Avenue" type="text"/>
+<input class="bg-background-cream border-3 border-border-black p-3 font-body-md focus:shadow-none transition-all" id="checkout-address" placeholder="House 12, Street 5, Gulshan" type="text"/>
 </div>
 <div class="flex flex-col gap-2">
 <label class="font-label-mono text-label-mono uppercase">Phone Number</label>
@@ -191,7 +191,7 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 <div class="flex flex-col gap-2">
 <label class="font-label-mono text-label-mono uppercase">City</label>
-<input class="bg-background-cream border-3 border-border-black p-3 font-body-md focus:shadow-none transition-all" placeholder="Neo City" type="text"/>
+<input class="bg-background-cream border-3 border-border-black p-3 font-body-md focus:shadow-none transition-all" id="checkout-city" placeholder="Karachi" type="text"/>
 </div>
 <div class="flex flex-col gap-2">
 <label class="font-label-mono text-label-mono uppercase">State</label>
@@ -252,7 +252,7 @@
                             <span class="material-symbols-outlined transition-transform group-hover:translate-x-2">arrow_forward</span>
 </span>
 </button>
-<p class="text-center font-label-mono text-[10px] uppercase mt-4 text-on-surface-variant">By confirming, you agree to our Epic Terms of Service.</p>
+<p class="text-center font-label-mono text-[10px] uppercase mt-4 text-on-surface-variant">Order details will be sent to our WhatsApp. Tap Send to confirm.</p>
 </div>
 </aside>
 </div>
@@ -290,15 +290,18 @@
             confirmBtn.classList.remove('active-btn');
         });
 
-        confirmBtn.addEventListener('click', () => {
+        confirmBtn.addEventListener('click', function () {
             const cartApi = window.DollarsFoodCart;
             const cart = cartApi.getCart();
             if (cart.length === 0) return;
 
-            const firstName = document.querySelector('input[placeholder="Gamer"]').value.trim();
+            const firstName = document.getElementById('checkout-first-name').value.trim();
+            const lastName = document.getElementById('checkout-last-name').value.trim();
             const phone = document.getElementById('checkout-phone').value.trim();
-            const street = document.querySelector('input[placeholder="123 Digital Avenue"]').value.trim();
-            const city = document.querySelector('input[placeholder="Neo City"]').value.trim();
+            const street = document.getElementById('checkout-address').value.trim();
+            const city = document.getElementById('checkout-city').value.trim();
+            const fullName = [firstName, lastName].filter(Boolean).join(' ');
+            const fullAddress = [street, city].filter(Boolean).join(', ');
 
             if (!firstName) {
                 alert('Please enter your first name.');
@@ -310,23 +313,33 @@
                 return;
             }
 
-            const total = cartApi.getCartTotal();
-            const whatsappUrl = cartApi.buildWhatsAppOrderUrl({
-                name: firstName,
+            if (!street || !city) {
+                alert('Please enter your full delivery address.');
+                return;
+            }
+
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2"><span class="material-symbols-outlined">hourglass_top</span> SENDING...</span>';
+
+            cartApi.submitOrder({
+                name: fullName,
                 phone: phone,
-                address: [street, city].filter(Boolean).join(', '),
-                items: cart,
-                total: total
+                address: fullAddress,
+                items: cart.slice(),
+                total: cartApi.getCartTotal()
+            }).then(function (result) {
+                if (result.autoSent) {
+                    alert('Order sent to restaurant WhatsApp successfully!');
+                    window.location.href = 'Main Page.html';
+                    return;
+                }
+
+                alert('Opening WhatsApp — tap Send to deliver your order to us.');
+            }).catch(function () {
+                alert('Could not open WhatsApp. Please contact us at 0324 5972524.');
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2">Confirm Order<span class="material-symbols-outlined transition-transform group-hover:translate-x-2">arrow_forward</span></span>';
             });
-
-            cartApi.clearCart();
-            confirmBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span> ORDER CONFIRMED!</span>';
-
-            setTimeout(() => {
-                alert('Order placed! We will call you shortly. Thank you!');
-                window.open(whatsappUrl, '_blank');
-                window.location.href = 'Main Page.html';
-            }, 400);
         });
     </script>
 </body></html>

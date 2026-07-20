@@ -96,23 +96,98 @@
     return '$' + amount.toFixed(2);
   }
 
-  function buildWhatsAppOrderUrl(orderDetails) {
-    var config = window.SiteConfig || { whatsapp: '923245972524' };
-    var lines = ['New order - Dollars Food'];
+  function buildOrderMessage(orderDetails) {
+    var lines = [
+      'NEW ORDER - Dollars Food',
+      '------------------------',
+      'Time: ' + new Date().toLocaleString('en-PK', { timeZone: 'Asia/Karachi' })
+    ];
+
     if (orderDetails.name) lines.push('Name: ' + orderDetails.name);
-    if (orderDetails.phone) lines.push('Phone: ' + orderDetails.phone);
+    if (orderDetails.phone) lines.push('Customer Phone: ' + orderDetails.phone);
     if (orderDetails.address) lines.push('Address: ' + orderDetails.address);
     lines.push('Payment: Cash on Delivery');
+
     if (orderDetails.items && orderDetails.items.length) {
-      lines.push('Items:');
+      lines.push('', 'Items:');
       orderDetails.items.forEach(function (item) {
         lines.push('- ' + item.name + ' x' + item.quantity + ' (' + formatPrice(item.price * item.quantity) + ')');
       });
     }
+
+    if (orderDetails.note) lines.push('', 'Note: ' + orderDetails.note);
+
     if (orderDetails.total !== undefined) {
-      lines.push('Total: ' + formatPrice(orderDetails.total));
+      lines.push('', 'Total: ' + formatPrice(orderDetails.total));
     }
-    return 'https://wa.me/' + config.whatsapp + '?text=' + encodeURIComponent(lines.join('\n'));
+
+    lines.push('', 'New order received. Please confirm.');
+    return lines.join('\n');
+  }
+
+  function buildWhatsAppOrderUrl(orderDetails) {
+    var config = window.SiteConfig || { whatsapp: '923245972524' };
+    var message = buildOrderMessage(orderDetails);
+    return 'https://wa.me/' + config.whatsapp + '?text=' + encodeURIComponent(message);
+  }
+
+  function notifyOwnerOnWhatsApp(orderDetails) {
+    var config = window.SiteConfig || { whatsapp: '923245972524' };
+    var message = buildOrderMessage(orderDetails);
+    var whatsappUrl = buildWhatsAppOrderUrl(orderDetails);
+
+    if (!config.callMeBotApiKey) {
+      return Promise.resolve({
+        whatsappUrl: whatsappUrl,
+        message: message,
+        autoSent: false
+      });
+    }
+
+    var apiUrl = 'https://api.callmebot.com/whatsapp.php?phone=' +
+      encodeURIComponent(config.whatsapp) +
+      '&text=' + encodeURIComponent(message) +
+      '&apikey=' + encodeURIComponent(config.callMeBotApiKey);
+
+    return fetch(apiUrl)
+      .then(function (response) {
+        return response.text();
+      })
+      .then(function (text) {
+        var sent = /sent|queued|success/i.test(text);
+        return {
+          whatsappUrl: whatsappUrl,
+          message: message,
+          autoSent: sent
+        };
+      })
+      .catch(function () {
+        return {
+          whatsappUrl: whatsappUrl,
+          message: message,
+          autoSent: false
+        };
+      });
+  }
+
+  function submitOrder(orderDetails, options) {
+    options = options || {};
+    return notifyOwnerOnWhatsApp(orderDetails).then(function (result) {
+      if (options.clearCart !== false) {
+        clearCart();
+      }
+
+      if (result.autoSent) {
+        if (options.onSuccess) options.onSuccess(result);
+        return result;
+      }
+
+      if (options.openWhatsApp !== false) {
+        window.location.href = result.whatsappUrl;
+      }
+
+      return result;
+    });
   }
 
   function bindAddToCartButtons() {
@@ -257,7 +332,10 @@
     clearCart: clearCart,
     updateCartBadges: updateCartBadges,
     formatPrice: formatPrice,
+    buildOrderMessage: buildOrderMessage,
     buildWhatsAppOrderUrl: buildWhatsAppOrderUrl,
+    notifyOwnerOnWhatsApp: notifyOwnerOnWhatsApp,
+    submitOrder: submitOrder,
     bindAddToCartButtons: bindAddToCartButtons,
     renderCartPage: renderCartPage,
     renderCheckoutSummary: renderCheckoutSummary

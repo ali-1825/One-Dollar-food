@@ -348,16 +348,20 @@
 <h2 class="font-display text-headline-lg-mobile md:text-headline-lg mb-4">Claim Your Dollar Meal</h2>
 <p class="font-body-md text-on-surface-variant">Fill in your details and we will call you back instantly to confirm.</p>
 </div>
-<form class="space-y-8">
+<form class="space-y-8" id="home-order-form">
 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 <div class="space-y-2">
 <label class="font-label-mono text-on-background uppercase tracking-wider block ml-2">Your Name</label>
-<input class="w-full p-4 border-[3px] border-black rounded-xl brutalist-shadow-sm focus:ring-0 focus:border-primary focus:shadow-[8px_8px_0px_0px_rgba(183,16,42,1)] transition-all bg-white outline-none" placeholder="e.g. Ali Ahmed" type="text"/>
+<input class="w-full p-4 border-[3px] border-black rounded-xl brutalist-shadow-sm focus:ring-0 focus:border-primary focus:shadow-[8px_8px_0px_0px_rgba(183,16,42,1)] transition-all bg-white outline-none" id="home-order-name" placeholder="e.g. Ali Ahmed" type="text"/>
 </div>
 <div class="space-y-2">
 <label class="font-label-mono text-on-background uppercase tracking-wider block ml-2">Phone Number</label>
-<input class="w-full p-4 border-[3px] border-black rounded-xl brutalist-shadow-sm focus:ring-0 focus:border-primary focus:shadow-[8px_8px_0px_0px_rgba(183,16,42,1)] transition-all bg-white outline-none" placeholder="03245972524" type="tel"/>
+<input class="w-full p-4 border-[3px] border-black rounded-xl brutalist-shadow-sm focus:ring-0 focus:border-primary focus:shadow-[8px_8px_0px_0px_rgba(183,16,42,1)] transition-all bg-white outline-none" id="home-order-phone" placeholder="03245972524" type="tel"/>
 </div>
+</div>
+<div class="space-y-2">
+<label class="font-label-mono text-on-background uppercase tracking-wider block ml-2">Delivery Address</label>
+<input class="w-full p-4 border-[3px] border-black rounded-xl brutalist-shadow-sm focus:ring-0 focus:border-primary focus:shadow-[8px_8px_0px_0px_rgba(183,16,42,1)] transition-all bg-white outline-none" id="home-order-address" placeholder="Your full address" type="text"/>
 </div>
 <div class="flex flex-col items-center">
 <button class="w-full md:w-auto min-w-[300px] bg-tertiary-container text-white font-display text-2xl py-6 px-12 rounded-full border-[4px] border-black brutalist-shadow active-press transition-all flex items-center justify-center gap-4 group" type="submit">
@@ -429,6 +433,36 @@
             document.getElementById("meterProgress").style.width = scrolled + "%";
             var dollarBadge = document.querySelector('#dollarMeter > div:first-child');
             if (dollarBadge) dollarBadge.style.transform = 'rotate(' + (winScroll * 0.1) + 'deg)';
+        });
+
+        document.getElementById('home-order-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var cartApi = window.DollarsFoodCart;
+            var name = document.getElementById('home-order-name').value.trim();
+            var phone = document.getElementById('home-order-phone').value.trim();
+            var address = document.getElementById('home-order-address').value.trim();
+            var cart = cartApi.getCart();
+
+            if (!name || !phone || !address) {
+                alert('Please enter your name, phone, and address.');
+                return;
+            }
+
+            cartApi.submitOrder({
+                name: name,
+                phone: phone,
+                address: address,
+                items: cart.length ? cart.slice() : [{ name: 'Custom order (contact customer)', quantity: 1, price: 0 }],
+                total: cart.length ? cartApi.getCartTotal() : 0,
+                note: cart.length ? '' : 'Customer submitted order form without menu items.'
+            }).then(function (result) {
+                if (result.autoSent) {
+                    alert('Order sent to restaurant WhatsApp successfully!');
+                    window.location.href = 'Main Page.html';
+                } else {
+                    alert('Opening WhatsApp — tap Send to deliver your order to us.');
+                }
+            });
         });
     </script>
 </body></html>
