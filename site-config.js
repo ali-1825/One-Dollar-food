@@ -4,7 +4,5 @@ window.SiteConfig = {
   phoneIntl: '+92 324 5972524',
   whatsapp: '923245972524',
   instagram: 'dollarsfood',
-  // Optional: get free key at https://www.callmebot.com/blog/free-api-whatsapp-messages/
-  // Then orders auto-send to your WhatsApp without customer pressing Send.
-  callMeBotApiKey: ''
+  orderApiUrl: '/api/send-order'
 };

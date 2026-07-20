@@ -132,40 +132,38 @@
   }
 
   function notifyOwnerOnWhatsApp(orderDetails) {
-    var config = window.SiteConfig || { whatsapp: '923245972524' };
+    var config = window.SiteConfig || { whatsapp: '923245972524', orderApiUrl: '/api/send-order' };
     var message = buildOrderMessage(orderDetails);
     var whatsappUrl = buildWhatsAppOrderUrl(orderDetails);
+    var apiUrl = config.orderApiUrl || '/api/send-order';
 
-    if (!config.callMeBotApiKey) {
-      return Promise.resolve({
-        whatsappUrl: whatsappUrl,
-        message: message,
-        autoSent: false
-      });
-    }
-
-    var apiUrl = 'https://api.callmebot.com/whatsapp.php?phone=' +
-      encodeURIComponent(config.whatsapp) +
-      '&text=' + encodeURIComponent(message) +
-      '&apikey=' + encodeURIComponent(config.callMeBotApiKey);
-
-    return fetch(apiUrl)
-      .then(function (response) {
-        return response.text();
+    return fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: orderDetails.name,
+        phone: orderDetails.phone,
+        address: orderDetails.address,
+        items: orderDetails.items || [],
+        total: orderDetails.total,
+        note: orderDetails.note || ''
       })
-      .then(function (text) {
-        var sent = /sent|queued|success/i.test(text);
-        return {
-          whatsappUrl: whatsappUrl,
-          message: message,
-          autoSent: sent
-        };
+    })
+      .then(function (response) {
+        return response.json().then(function (data) {
+          return {
+            ok: response.ok && data.success,
+            data: data,
+            whatsappUrl: whatsappUrl,
+            message: message
+          };
+        });
       })
       .catch(function () {
         return {
+          ok: false,
           whatsappUrl: whatsappUrl,
-          message: message,
-          autoSent: false
+          message: message
         };
       });
   }
@@ -173,20 +171,35 @@
   function submitOrder(orderDetails, options) {
     options = options || {};
     return notifyOwnerOnWhatsApp(orderDetails).then(function (result) {
-      if (options.clearCart !== false) {
-        clearCart();
+      if (result.ok) {
+        if (options.clearCart !== false) {
+          clearCart();
+        }
+        return {
+          success: true,
+          autoSent: true,
+          message: result.message
+        };
       }
 
-      if (result.autoSent) {
-        if (options.onSuccess) options.onSuccess(result);
-        return result;
-      }
-
-      if (options.openWhatsApp !== false) {
+      if (options.fallbackWhatsApp !== false && result.whatsappUrl) {
+        if (options.clearCart !== false) {
+          clearCart();
+        }
         window.location.href = result.whatsappUrl;
+        return {
+          success: false,
+          autoSent: false,
+          fallback: true,
+          error: result.data && result.data.error ? result.data.error : 'WhatsApp API unavailable.'
+        };
       }
 
-      return result;
+      return {
+        success: false,
+        autoSent: false,
+        error: result.data && result.data.error ? result.data.error : 'Could not send order notification.'
+      };
     });
   }
 
