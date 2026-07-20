@@ -30,7 +30,7 @@ export function isGoogleSheetsServiceConfigured(): boolean {
 }
 
 function getSheetName(): string {
-  return process.env.GOOGLE_SHEETS_SHEET_NAME?.trim() || 'Orders';
+  return process.env.GOOGLE_SHEETS_SHEET_NAME?.trim() || 'Sheet1';
 }
 
 function getSheetsClient() {
