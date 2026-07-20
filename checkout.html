@@ -252,7 +252,7 @@
                             <span class="material-symbols-outlined transition-transform group-hover:translate-x-2">arrow_forward</span>
 </span>
 </button>
-<p class="text-center font-label-mono text-[10px] uppercase mt-4 text-on-surface-variant">Your order will be sent to us automatically on WhatsApp.</p>
+<p class="text-center font-label-mono text-[10px] uppercase mt-4 text-on-surface-variant">WhatsApp will open with your order ready to send.</p>
 </div>
 </aside>
 </div>
@@ -319,7 +319,7 @@
             }
 
             confirmBtn.disabled = true;
-            confirmBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2"><span class="material-symbols-outlined">hourglass_top</span> SENDING...</span>';
+            confirmBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2"><span class="material-symbols-outlined">hourglass_top</span> OPENING WHATSAPP...</span>';
 
             cartApi.submitOrder({
                 name: fullName,
@@ -327,20 +327,6 @@
                 address: fullAddress,
                 items: cart.slice(),
                 total: cartApi.getCartTotal()
-            }).then(function (result) {
-                if (result.success) {
-                    alert('Order placed successfully! The restaurant has received your order.');
-                    window.location.href = 'Main Page.html';
-                    return;
-                }
-
-                alert(result.error || 'Could not place order. Please call 0324 5972524.');
-                confirmBtn.disabled = false;
-                confirmBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2">Confirm Order<span class="material-symbols-outlined transition-transform group-hover:translate-x-2">arrow_forward</span></span>';
-            }).catch(function () {
-                alert('Could not place order. Please contact us at 0324 5972524.');
-                confirmBtn.disabled = false;
-                confirmBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2">Confirm Order<span class="material-symbols-outlined transition-transform group-hover:translate-x-2">arrow_forward</span></span>';
             });
         });
     </script>

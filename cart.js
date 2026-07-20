@@ -100,28 +100,31 @@
     var lines = [
       'NEW ORDER - Dollars Food',
       '------------------------',
-      'Time: ' + new Date().toLocaleString('en-PK', { timeZone: 'Asia/Karachi' })
+      'Order Time: ' + new Date().toLocaleString('en-PK', { timeZone: 'Asia/Karachi' })
     ];
 
-    if (orderDetails.name) lines.push('Name: ' + orderDetails.name);
-    if (orderDetails.phone) lines.push('Customer Phone: ' + orderDetails.phone);
-    if (orderDetails.address) lines.push('Address: ' + orderDetails.address);
+    if (orderDetails.name) lines.push('Customer Name: ' + orderDetails.name);
+    if (orderDetails.phone) lines.push('Phone Number: ' + orderDetails.phone);
+    if (orderDetails.address) lines.push('Delivery Address: ' + orderDetails.address);
     lines.push('Payment: Cash on Delivery');
 
     if (orderDetails.items && orderDetails.items.length) {
-      lines.push('', 'Items:');
-      orderDetails.items.forEach(function (item) {
-        lines.push('- ' + item.name + ' x' + item.quantity + ' (' + formatPrice(item.price * item.quantity) + ')');
+      lines.push('', 'Ordered Items:');
+      orderDetails.items.forEach(function (item, index) {
+        lines.push(
+          (index + 1) + '. ' + item.name +
+          ' | Qty: ' + item.quantity +
+          ' | ' + formatPrice(item.price * item.quantity)
+        );
       });
     }
 
     if (orderDetails.note) lines.push('', 'Note: ' + orderDetails.note);
 
     if (orderDetails.total !== undefined) {
-      lines.push('', 'Total: ' + formatPrice(orderDetails.total));
+      lines.push('', 'Total Price: ' + formatPrice(orderDetails.total));
     }
 
-    lines.push('', 'New order received. Please confirm.');
     return lines.join('\n');
   }
 
@@ -131,57 +134,17 @@
     return 'https://wa.me/' + config.whatsapp + '?text=' + encodeURIComponent(message);
   }
 
-  function notifyOwnerOnWhatsApp(orderDetails) {
-    var config = window.SiteConfig || { orderApiUrl: '/api/send-order' };
-    var apiUrl = config.orderApiUrl || '/api/send-order';
-
-    return fetch(apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: orderDetails.name,
-        phone: orderDetails.phone,
-        address: orderDetails.address,
-        items: orderDetails.items || [],
-        total: orderDetails.total,
-        note: orderDetails.note || ''
-      })
-    })
-      .then(function (response) {
-        return response.json().then(function (data) {
-          return {
-            ok: response.ok && data.success,
-            data: data
-          };
-        });
-      })
-      .catch(function () {
-        return {
-          ok: false,
-          data: { error: 'Could not reach order server. Please try again or call 0324 5972524.' }
-        };
-      });
-  }
-
   function submitOrder(orderDetails, options) {
     options = options || {};
-    return notifyOwnerOnWhatsApp(orderDetails).then(function (result) {
-      if (result.ok) {
-        if (options.clearCart !== false) {
-          clearCart();
-        }
-        return {
-          success: true,
-          autoSent: true
-        };
-      }
+    var whatsappUrl = buildWhatsAppOrderUrl(orderDetails);
 
-      return {
-        success: false,
-        autoSent: false,
-        error: result.data && result.data.error ? result.data.error : 'Could not send order to restaurant.'
-      };
-    });
+    if (options.clearCart !== false) {
+      clearCart();
+    }
+
+    window.location.href = whatsappUrl;
+
+    return Promise.resolve({ success: true });
   }
 
   function bindAddToCartButtons() {
@@ -328,7 +291,6 @@
     formatPrice: formatPrice,
     buildOrderMessage: buildOrderMessage,
     buildWhatsAppOrderUrl: buildWhatsAppOrderUrl,
-    notifyOwnerOnWhatsApp: notifyOwnerOnWhatsApp,
     submitOrder: submitOrder,
     bindAddToCartButtons: bindAddToCartButtons,
     renderCartPage: renderCartPage,

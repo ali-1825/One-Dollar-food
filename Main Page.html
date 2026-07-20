@@ -455,13 +455,6 @@
                 items: cart.length ? cart.slice() : [{ name: 'Custom order (contact customer)', quantity: 1, price: 0 }],
                 total: cart.length ? cartApi.getCartTotal() : 0,
                 note: cart.length ? '' : 'Customer submitted order form without menu items.'
-            }).then(function (result) {
-                if (result.success) {
-                    alert('Order placed successfully! The restaurant has received your order.');
-                    window.location.href = 'Main Page.html';
-                } else {
-                    alert(result.error || 'Could not place order. Please call 0324 5972524.');
-                }
             });
         });
     </script>
