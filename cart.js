@@ -132,9 +132,7 @@
   }
 
   function notifyOwnerOnWhatsApp(orderDetails) {
-    var config = window.SiteConfig || { whatsapp: '923245972524', orderApiUrl: '/api/send-order' };
-    var message = buildOrderMessage(orderDetails);
-    var whatsappUrl = buildWhatsAppOrderUrl(orderDetails);
+    var config = window.SiteConfig || { orderApiUrl: '/api/send-order' };
     var apiUrl = config.orderApiUrl || '/api/send-order';
 
     return fetch(apiUrl, {
@@ -153,17 +151,14 @@
         return response.json().then(function (data) {
           return {
             ok: response.ok && data.success,
-            data: data,
-            whatsappUrl: whatsappUrl,
-            message: message
+            data: data
           };
         });
       })
       .catch(function () {
         return {
           ok: false,
-          whatsappUrl: whatsappUrl,
-          message: message
+          data: { error: 'Could not reach order server. Please try again or call 0324 5972524.' }
         };
       });
   }
@@ -177,28 +172,14 @@
         }
         return {
           success: true,
-          autoSent: true,
-          message: result.message
-        };
-      }
-
-      if (options.fallbackWhatsApp !== false && result.whatsappUrl) {
-        if (options.clearCart !== false) {
-          clearCart();
-        }
-        window.location.href = result.whatsappUrl;
-        return {
-          success: false,
-          autoSent: false,
-          fallback: true,
-          error: result.data && result.data.error ? result.data.error : 'WhatsApp API unavailable.'
+          autoSent: true
         };
       }
 
       return {
         success: false,
         autoSent: false,
-        error: result.data && result.data.error ? result.data.error : 'Could not send order notification.'
+        error: result.data && result.data.error ? result.data.error : 'Could not send order to restaurant.'
       };
     });
   }

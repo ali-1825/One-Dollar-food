@@ -329,13 +329,8 @@
                 total: cartApi.getCartTotal()
             }).then(function (result) {
                 if (result.success) {
-                    alert('Order placed successfully! We received your order on WhatsApp.');
+                    alert('Order placed successfully! The restaurant has received your order.');
                     window.location.href = 'Main Page.html';
-                    return;
-                }
-
-                if (result.fallback) {
-                    alert('WhatsApp API is unavailable. Opening WhatsApp backup — please tap Send.');
                     return;
                 }
 
