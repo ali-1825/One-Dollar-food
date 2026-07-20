@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dollars Food | Everything for $1</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&amp;family=Poppins:wght@400;600&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#bb152c",
+                    "secondary-fixed-dim": "#f4bf32",
+                    "tertiary-fixed-dim": "#4ae183",
+                    "on-tertiary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "inverse-surface": "#3e2d1d",
+                    "primary-container": "#db313f",
+                    "surface-container": "#ffeada",
+                    "primary": "#b7102a",
+                    "on-tertiary-container": "#f6fff4",
+                    "on-primary-fixed-variant": "#92001c",
+                    "on-error-container": "#93000a",
+                    "on-error": "#ffffff",
+                    "border-black": "#241608",
+                    "on-primary-container": "#fffbff",
+                    "secondary-container": "#fdc73a",
+                    "secondary-fixed": "#ffdf9a",
+                    "primary-fixed-dim": "#ffb3b1",
+                    "surface-container-low": "#fff1e7",
+                    "surface-container-high": "#ffe3cc",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed": "#251a00",
+                    "on-tertiary-fixed-variant": "#005228",
+                    "on-background": "#27190a",
+                    "surface": "#fff8f5",
+                    "on-secondary-container": "#6f5400",
+                    "on-secondary-fixed-variant": "#5a4300",
+                    "tertiary-fixed": "#6bfe9c",
+                    "surface-container-highest": "#faddc6",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#00210c",
+                    "on-primary-fixed": "#410007",
+                    "inverse-on-surface": "#ffeee1",
+                    "secondary": "#775a00",
+                    "outline": "#8f6f6e",
+                    "surface-dim": "#f1d5be",
+                    "on-surface-variant": "#5b403f",
+                    "outline-variant": "#e4bebc",
+                    "tertiary-container": "#008645",
+                    "on-secondary": "#ffffff",
+                    "background-cream": "#FFF6E5",
+                    "inverse-primary": "#ffb3b1",
+                    "shadow-black": "#241608",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface": "#27190a",
+                    "primary-fixed": "#ffdad8",
+                    "surface-variant": "#faddc6",
+                    "background": "#fff8f5",
+                    "tertiary": "#006a35",
+                    "surface-bright": "#fff8f5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "border-width": "3px",
+                    "margin-desktop": "64px",
+                    "shadow-offset": "6px",
+                    "margin-mobile": "16px",
+                    "unit": "8px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Bricolage Grotesque"],
+                    "body-lg": ["Poppins"],
+                    "headline-lg-mobile": ["Bricolage Grotesque"],
+                    "display": ["Bricolage Grotesque"],
+                    "body-md": ["Poppins"],
+                    "price-display": ["Space Mono"],
+                    "headline-lg": ["Bricolage Grotesque"],
+                    "label-mono": ["Space Mono"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "800"}],
+                    "display": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "price-display": ["24px", {"lineHeight": "1.0", "fontWeight": "700"}],
+                    "headline-lg": ["40px", {"lineHeight": "1.2", "fontWeight": "800"}],
+                    "label-mono": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .brutalist-shadow {
+            box-shadow: 6px 6px 0px 0px #241608;
+        }
+        
+        .brutalist-shadow-sm {
+            box-shadow: 4px 4px 0px 0px #241608;
+        }
+
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .active-press:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px 0px #241608;
+        }
+
+        .dollar-meter-progress {
+            transition: width 0.1s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-background-cream text-on-background font-body-md">
+<!-- Top-Right Dollar-Meter -->
+<div class="fixed top-24 right-6 z-[60] flex flex-col items-center gap-2 group pointer-events-none md:pointer-events-auto" id="dollarMeter">
+<div class="bg-secondary-container border-[3px] border-black brutalist-shadow rounded-full p-4 transform transition-transform duration-300 group-hover:scale-110">
+<span class="text-3xl">💵</span>
+</div>
+<div class="w-16 h-4 bg-white border-[3px] border-black brutalist-shadow rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-container dollar-meter-progress w-0" id="meterProgress"></div>
+</div>
+</div>
+<!-- Header Navigation -->
+<nav class="fixed top-0 w-full z-50 bg-background-cream border-b-[3px] border-black shadow-[6px_6px_0px_0px_rgba(36,22,8,1)] flex justify-between items-center px-gutter py-4 w-full max-w-full">
+<div class="flex items-center gap-4">
+<img alt="Dollars Food Logo" class="w-12 h-12 rounded-full border-[2px] border-black -rotate-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbihjPNWrcND3B9kuhSIKMJUkgUpUa9W_FjzaDYd98W_RyAi3EStylb9tWFp15jT4wZYaqGXEFgt0Cix8CJRojS1Jsrpe5N_yIaU1HP53OGdc3wTOoxInWt-QKWUTFAKH-b9thG4GRg9WVjljLrc16sSl_JHvOab1mzZU_COSWb3YdofVogo81DwYPOAQyStz8gqEfcYDnq8fY3JL88yp-4z9X6LreYl9D8-0fyhD0bQz50CnhuYE"/>
+<a class="font-display text-headline-lg-mobile md:text-headline-md text-primary uppercase -rotate-2 tracking-tighter" href="Main Page.html">Dollars Food</a>
+</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-on-background font-body-md hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all hover:text-primary" href="Full menu.html">Menu</a>
+<a class="text-on-background font-body-md hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all hover:text-primary" href="#why-us">Why Us</a>
+<a class="text-on-background font-body-md hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all hover:text-primary" href="#contact">Contact</a>
+<a class="text-on-background font-body-md hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all hover:text-primary" href="cart.html">Stash</a>
+<a class="relative bg-primary text-on-primary font-headline-md px-6 py-2 rounded-full border-[3px] border-black brutalist-shadow-sm active-press transition-all" href="Full menu.html">Order Now</a>
+<a class="relative hidden md:inline-flex bg-secondary-container border-[3px] border-black brutalist-shadow-sm rounded-full p-2 items-center justify-center" href="cart.html">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="hidden absolute -top-2 -right-2 bg-primary text-white border-2 border-black text-[10px] font-bold h-5 w-5 items-center justify-center rounded-full" data-cart-count>0</span>
+</a>
+</div>
+<a class="relative md:hidden bg-secondary-container border-[3px] border-black rounded-lg brutalist-shadow-sm p-2" href="cart.html">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="hidden absolute -top-2 -right-2 bg-primary text-white border-2 border-black text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full" data-cart-count>0</span>
+</a>
+<button class="md:hidden p-2 border-[3px] border-black rounded-lg brutalist-shadow-sm bg-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</nav>
+<!-- Hero Section -->
+<section class="pt-32 pb-16 px-gutter md:px-margin-desktop overflow-hidden">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
+<div class="w-full md:w-1/2 space-y-8 z-10">
+<div class="inline-block bg-tertiary-fixed text-on-tertiary-fixed font-label-mono px-4 py-2 border-[3px] border-black brutalist-shadow-sm rotate-1">
+                    SAB KUCH SIRF $1 MEIN!
+                </div>
+<h1 class="font-display text-headline-lg-mobile md:text-display text-on-background leading-tight">
+                    Delicious Fast Food <span class="text-primary underline decoration-[6px] decoration-secondary-container">Sirf $1 Mein</span>
+</h1>
+<p class="font-body-lg text-on-surface-variant max-w-lg">
+                    Experience the pop-art revolution of flavors. From juicy burgers to crispy fries, everything is strictly $1. High energy, high taste, low price.
+                </p>
+<div class="flex flex-col sm:flex-row gap-6 pt-4">
+<a class="bg-tertiary-fixed-dim text-on-background font-headline-md text-center py-4 px-8 rounded-full border-[3px] border-black brutalist-shadow active-press transition-all" href="Full menu.html">
+                        Menu Dekhein
+                    </a>
+<a class="bg-primary text-on-primary font-headline-md text-center py-4 px-8 rounded-full border-[3px] border-black brutalist-shadow active-press transition-all" href="tel:+923464934304">
+                        Call Karein
+                    </a>
+</div>
+</div>
+<div class="w-full md:w-1/2 relative">
+<div class="absolute -top-10 -right-10 w-32 h-32 md:w-48 md:h-48 bg-secondary-container rounded-full border-[4px] border-black brutalist-shadow flex items-center justify-center animate-bounce z-20">
+<span class="font-display text-4xl md:text-6xl text-on-secondary-container">$1</span>
+</div>
+<div class="relative bg-white border-[4px] border-black brutalist-shadow rounded-[2rem] overflow-hidden rotate-2">
+<img class="w-full h-auto" data-alt="A vibrant, high-contrast pop-art style illustration of a stacked gourmet burger with melting cheese, crispy bacon, and fresh lettuce, set against a bright cream background with halftone dot patterns and bold comic-book action text. The lighting is vivid and energetic, reflecting a gaming-inspired street food aesthetic with thick black ink-trap outlines and punchy red and yellow accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlWI6YP1tP-PSFD1MkY7WwESqmMMaLgQVF57-Ov3tZKu4CFd4XVEzj0guj95MMJUuk25dG6n1bVTYwtXNVfKifGheYD7qJIzN5prgLqA5LFXDEtk1beZWYgELgRc5PFht6oH1cXStDrIhXmQfhmv0Yn5KBTi4c1DV2Qj-Qwz_fPTMOSz6d-x8xESi_dzXY7DIOybc2EI8Ra-xsOOEcRFisXDdXB8Tj-MJrMHBtGBTJvktCioR2qh8"/>
+</div>
+<!-- Decorative Elements -->
+<div class="absolute -bottom-6 -left-6 w-24 h-24 bg-tertiary-container border-[3px] border-black brutalist-shadow rounded-lg -rotate-12 flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-4xl">fastfood</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Marquee -->
+<div class="bg-secondary-fixed border-y-[3px] border-black py-4 marquee-container">
+<div class="marquee-content flex gap-12 items-center">
+<span class="font-label-mono text-headline-md text-on-secondary-fixed uppercase">Everything Just $1</span>
+<span class="text-3xl">🍔</span>
+<span class="font-label-mono text-headline-md text-on-secondary-fixed uppercase">Free Delivery</span>
+<span class="text-3xl">🛵</span>
+<span class="font-label-mono text-headline-md text-on-secondary-fixed uppercase">Hot &amp; Fresh</span>
+<span class="text-3xl">🔥</span>
+<span class="font-label-mono text-headline-md text-on-secondary-fixed uppercase">1,100+ Happy Customers</span>
+<span class="text-3xl">👾</span>
+<!-- Duplicate for seamless loop -->
+<span class="font-label-mono text-headline-md text-on-secondary-fixed uppercase">Everything Just $1</span>
+<span class="text-3xl">🍔</span>
+<span class="font-label-mono text-headline-md text-on-secondary-fixed uppercase">Free Delivery</span>
+<span class="text-3xl">🛵</span>
+<span class="font-label-mono text-headline-md text-on-secondary-fixed uppercase">Hot &amp; Fresh</span>
+<span class="text-3xl">🔥</span>
+<span class="font-label-mono text-headline-md text-on-secondary-fixed uppercase">1,100+ Happy Customers</span>
+<span class="text-3xl">👾</span>
+</div>
+</div>
+<!-- Menu Grid -->
+<section class="py-24 px-gutter md:px-margin-desktop" id="menu">
+<div class="max-w-7xl mx-auto">
+<div class="flex justify-between items-end mb-16">
+<div>
+<h2 class="font-display text-headline-lg-mobile md:text-headline-lg mb-4">Daily Drops</h2>
+<p class="font-body-lg text-on-surface-variant">Click to add to your dollar stash.</p>
+</div>
+<div class="hidden md:block">
+<span class="material-symbols-outlined text-6xl text-primary animate-pulse">keyboard_double_arrow_down</span>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Card 1: Burgers -->
+<div class="group bg-surface-container border-[3px] border-black brutalist-shadow rounded-xl overflow-hidden hover:-translate-y-2 transition-all">
+<div class="h-48 relative overflow-hidden bg-white border-b-[3px] border-black">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A stylized, flat-design illustration of a classic cheeseburger in a gaming-inspired pop-art aesthetic. Bright yellow cheese, red tomato slices, and thick black outlines against a soft cream background with retro halftone patterns." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDe19NRhb-anqRJietE6jMY8evsJy0N4y-zNCN4E_I3fHDROR02WXoZ04qlGgOWLwNehAyIpBP-ZCIBuYLyuCncayUGbtzbjnXQP_QahGSUIbtk2_yuTg8EbTlTFWpKEzLOTOPXyzbA_gpH8URFBR82IhDSku4YCichILtxjxfw8t2MUAn6nX5ju92JnB-0Vwtyo5FI0xwp4ggX9CIZBe_eWJNdMZNxWQgTsJcdD56MY-0IOpYK6_c"/>
+<div class="absolute top-4 right-4 bg-tertiary-fixed-dim border-[2px] border-black font-price-display px-3 py-1 rounded-full brutalist-shadow-sm">$1</div>
+</div>
+<div class="p-6 bg-white h-full">
+<h3 class="font-headline-md mb-2">Burgers</h3>
+<p class="font-body-md text-on-surface-variant mb-4">Juicy beef or spicy chicken, double stacked with love.</p>
+<a class="block w-full py-3 bg-secondary-container border-[3px] border-black font-label-mono rounded-lg brutalist-shadow-sm active-press text-center" href="Full menu.html">VIEW MENU</a>
+</div>
+</div>
+<!-- Card 2: Fries -->
+<div class="group bg-surface-container border-[3px] border-black brutalist-shadow rounded-xl overflow-hidden hover:-translate-y-2 transition-all">
+<div class="h-48 relative overflow-hidden bg-white border-b-[3px] border-black">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A bold pop-art drawing of golden-brown French fries in a red cardboard box. Thick black ink outlines, vibrant yellow and red palette, gaming aesthetics with pixel heart icons nearby." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOF2YvCSfYQ3-1ye_e2ZLoB4I32tIWyxycu1gZSGMPkXVOTxqi3gZ1CRgg7eOVpGVt705CeMeSTF5xZ7uE6qMe77ytKYauX9QhjHlZrhmun645wYRzwGI4rXenMvrdM3feGyoGcKkFbOsZr3pKAX9hh0cdL4X1UPqECDOFs-O9encjZIjO1Lm5ZHZWGq4CbvjzfoEWRUdnO-5UgcqA_dXcmgJK7Rj8mw3yOI9JzlBdLfcjw58LPTw"/>
+<div class="absolute top-4 right-4 bg-tertiary-fixed-dim border-[2px] border-black font-price-display px-3 py-1 rounded-full brutalist-shadow-sm">$1</div>
+</div>
+<div class="p-6 bg-white h-full">
+<h3 class="font-headline-md mb-2">Fries</h3>
+<p class="font-body-md text-on-surface-variant mb-4">Peri-peri or salted. Crispy outside, fluffy inside.</p>
+<a class="block w-full py-3 bg-secondary-container border-[3px] border-black font-label-mono rounded-lg brutalist-shadow-sm active-press text-center" href="Full menu.html">VIEW MENU</a>
+</div>
+</div>
+<!-- Card 3: Wraps -->
+<div class="group bg-surface-container border-[3px] border-black brutalist-shadow rounded-xl overflow-hidden hover:-translate-y-2 transition-all">
+<div class="h-48 relative overflow-hidden bg-white border-b-[3px] border-black">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="An energetic pop-art illustration of a chicken wrap sliced in half, showing grilled chicken and fresh vegetables. Vibrant greens and oranges, thick cartoon-style outlines, and a energetic comic-book background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoOzehO1--dpi4NiDazaYqvNwTJraZeIH66FskMlBt3IJgk8MRElCotyZ2mlH_0ObVdFuuWhLMP1oM57tcRS6lVJGbv0DTN11_wrtCUq7lIkIGccmpHiItaQ_nyG2fYm8usJkVSSPKnvHU8sQ7cGBTo8-LXgwMBcIsOctqrxEq7KFOr3BadG6bk-XtuHDayYRPvwATY-ok8Mo8VUxR4qP3hh9lUTIGiEOfGVy62kBSxXn47XA2rDk"/>
+<div class="absolute top-4 right-4 bg-tertiary-fixed-dim border-[2px] border-black font-price-display px-3 py-1 rounded-full brutalist-shadow-sm">$1</div>
+</div>
+<div class="p-6 bg-white h-full">
+<h3 class="font-headline-md mb-2">Wraps &amp; Rolls</h3>
+<p class="font-body-md text-on-surface-variant mb-4">Tortilla wrapped goodness with secret signature sauces.</p>
+<a class="block w-full py-3 bg-secondary-container border-[3px] border-black font-label-mono rounded-lg brutalist-shadow-sm active-press text-center" href="Full menu.html">VIEW MENU</a>
+</div>
+</div>
+<!-- Card 4: Drinks -->
+<div class="group bg-surface-container border-[3px] border-black brutalist-shadow rounded-xl overflow-hidden hover:-translate-y-2 transition-all">
+<div class="h-48 relative overflow-hidden bg-white border-b-[3px] border-black">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A cool, retro pop-art graphic of a milkshake with a striped straw and a cold soft drink can. High-contrast colors, bold black strokes, and ice cube icons in a pixel-art gaming style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRWz7GAWZgXoKu80ZPHJpoeqgVrgLz5h9jAcMcpuxx_DWqY5WfQ0wGcROFyCHrXMHhXcf5HYCIhr4ugAwPHLUYyROrBqQhNe3LNy0GXGM_CNjJm8G9UkQ91Ni_Xn6NRjpIfnIGzSIwOFQgo9o5QC_k2q0UbQlnqYvFBJEI5nWLiAKKDN36a-Q83t2Ty-n0ks5FOuj6Pt46bo16pCv-ZCS_f0zMuuSThXVQdawkrgMEcI74fIR3jEY"/>
+<div class="absolute top-4 right-4 bg-tertiary-fixed-dim border-[2px] border-black font-price-display px-3 py-1 rounded-full brutalist-shadow-sm">$1</div>
+</div>
+<div class="p-6 bg-white h-full">
+<h3 class="font-headline-md mb-2">Drinks &amp; Shakes</h3>
+<p class="font-body-md text-on-surface-variant mb-4">Brain-freezing shakes and ice-cold soft drinks.</p>
+<a class="block w-full py-3 bg-secondary-container border-[3px] border-black font-label-mono rounded-lg brutalist-shadow-sm active-press text-center" href="Full menu.html">VIEW MENU</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Why Us Section -->
+<section class="bg-border-black text-white py-24 px-gutter md:px-margin-desktop relative overflow-hidden" id="why-us">
+<div class="absolute top-0 right-0 p-12 opacity-10">
+<span class="material-symbols-outlined text-[300px]" style="font-variation-settings: 'FILL' 1;">currency_exchange</span>
+</div>
+<div class="max-w-7xl mx-auto relative z-10">
+<div class="text-center mb-20">
+<h2 class="font-display text-headline-lg-mobile md:text-headline-lg text-secondary-fixed mb-6 uppercase">Why Dollars Food?</h2>
+<p class="font-body-lg text-surface-container-highest max-w-2xl mx-auto">We ripped up the rulebook. Quality food shouldn't cost a fortune. That's why we kept it simple.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<div class="p-8 border-[3px] border-tertiary-fixed-dim brutalist-shadow bg-surface-variant/10 rounded-2xl">
+<div class="w-16 h-16 bg-tertiary-fixed-dim rounded-full flex items-center justify-center mb-6 border-[3px] border-black">
+<span class="material-symbols-outlined text-border-black text-3xl">monetization_on</span>
+</div>
+<h3 class="font-headline-md text-tertiary-fixed-dim mb-4">Fixed $1</h3>
+<p class="font-body-md">No hidden taxes, no "starting from" traps. Everything on the menu is exactly one dollar. Period.</p>
+</div>
+<div class="p-8 border-[3px] border-secondary-fixed brutalist-shadow bg-surface-variant/10 rounded-2xl translate-y-4">
+<div class="w-16 h-16 bg-secondary-fixed rounded-full flex items-center justify-center mb-6 border-[3px] border-black">
+<span class="material-symbols-outlined text-border-black text-3xl">delivery_dining</span>
+</div>
+<h3 class="font-headline-md text-secondary-fixed mb-4">Free Delivery</h3>
+<p class="font-body-md">We bring the flavor to your doorstep within a 3km radius at zero extra cost. Fast and fresh.</p>
+</div>
+<div class="p-8 border-[3px] border-primary-fixed-dim brutalist-shadow bg-surface-variant/10 rounded-2xl">
+<div class="w-16 h-16 bg-primary-fixed-dim rounded-full flex items-center justify-center mb-6 border-[3px] border-black">
+<span class="material-symbols-outlined text-border-black text-3xl">local_fire_department</span>
+</div>
+<h3 class="font-headline-md text-primary-fixed-dim mb-4">Hot &amp; Fresh</h3>
+<p class="font-body-md">Made to order every single time. No pre-cooked patties, just raw heat and real taste.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Order Form Section -->
+<section class="py-24 px-gutter md:px-margin-desktop" id="order">
+<div class="max-w-4xl mx-auto bg-surface-container-high border-[4px] border-black brutalist-shadow rounded-[3rem] p-8 md:p-16 relative">
+<div class="absolute -top-12 -left-6 md:-left-12 rotate-[-12deg] bg-primary text-white border-[3px] border-black px-6 py-3 font-display text-2xl md:text-4xl brutalist-shadow">
+                ORDER ABHI!
+            </div>
+<div class="mb-10 text-center">
+<h2 class="font-display text-headline-lg-mobile md:text-headline-lg mb-4">Claim Your Dollar Meal</h2>
+<p class="font-body-md text-on-surface-variant">Fill your details and we'll call you back instantly to confirm!</p>
+</div>
+<form class="space-y-8">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-2">
+<label class="font-label-mono text-on-background uppercase tracking-wider block ml-2">Apka Naam</label>
+<input class="w-full p-4 border-[3px] border-black rounded-xl brutalist-shadow-sm focus:ring-0 focus:border-primary focus:shadow-[8px_8px_0px_0px_rgba(183,16,42,1)] transition-all bg-white outline-none" placeholder="e.g. Ali Ahmed" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="font-label-mono text-on-background uppercase tracking-wider block ml-2">Phone Number</label>
+<input class="w-full p-4 border-[3px] border-black rounded-xl brutalist-shadow-sm focus:ring-0 focus:border-primary focus:shadow-[8px_8px_0px_0px_rgba(183,16,42,1)] transition-all bg-white outline-none" placeholder="03XX XXXXXXX" type="tel"/>
+</div>
+</div>
+<div class="flex flex-col items-center">
+<button class="w-full md:w-auto min-w-[300px] bg-tertiary-container text-white font-display text-2xl py-6 px-12 rounded-full border-[4px] border-black brutalist-shadow active-press transition-all flex items-center justify-center gap-4 group" type="submit">
+                        ORDER NOW
+                        <span class="material-symbols-outlined text-3xl group-hover:translate-x-2 transition-transform">arrow_forward</span>
+</button>
+<p class="mt-6 font-label-mono text-sm text-on-surface-variant uppercase italic">Limited time offer: Every item is $1 only!</p>
+</div>
+</form>
+</div>
+</section>
+<!-- Contact & Socials -->
+<section class="py-16 px-gutter border-t-[3px] border-black bg-white" id="contact">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
+<div class="space-y-4">
+<h4 class="font-display text-headline-md text-primary">GET IN TOUCH</h4>
+<div class="flex flex-col gap-2">
+<a class="font-price-display text-2xl hover:text-primary transition-colors flex items-center justify-center md:justify-start gap-3" href="tel:+923464934304">
+<span class="material-symbols-outlined">call</span> +92 346 4934304
+                    </a>
+<a class="font-price-display text-2xl hover:text-primary transition-colors flex items-center justify-center md:justify-start gap-3" href="https://instagram.com/dollarsfood">
+<span class="material-symbols-outlined">alternate_email</span> @dollarsfood
+                    </a>
+</div>
+</div>
+<div class="flex gap-6">
+<div class="w-16 h-16 bg-secondary-container border-[3px] border-black brutalist-shadow-sm rounded-full flex items-center justify-center hover:rotate-12 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-3xl">share</span>
+</div>
+<div class="w-16 h-16 bg-primary-fixed-dim border-[3px] border-black brutalist-shadow-sm rounded-full flex items-center justify-center hover:-rotate-12 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-3xl">map</span>
+</div>
+<div class="w-16 h-16 bg-tertiary-fixed border-[3px] border-black brutalist-shadow-sm rounded-full flex items-center justify-center hover:rotate-12 transition-transform cursor-pointer">
+<span class="material-symbols-outlined text-3xl">chat</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-container-highest border-t-[3px] border-black w-full">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center px-margin-desktop py-12 w-full gap-8">
+<div class="flex items-center gap-4">
+<img alt="Dollars Food Logo" class="w-10 h-10 rounded-full border-[2px] border-black" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbihjPNWrcND3B9kuhSIKMJUkgUpUa9W_FjzaDYd98W_RyAi3EStylb9tWFp15jT4wZYaqGXEFgt0Cix8CJRojS1Jsrpe5N_yIaU1HP53OGdc3wTOoxInWt-QKWUTFAKH-b9thG4GRg9WVjljLrc16sSl_JHvOab1mzZU_COSWb3YdofVogo81DwYPOAQyStz8gqEfcYDnq8fY3JL88yp-4z9X6LreYl9D8-0fyhD0bQz50CnhuYE"/>
+<span class="font-display text-headline-md text-primary">Dollars Food</span>
+</div>
+<div class="flex flex-wrap gap-x-8 gap-y-4">
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-colors" href="Full menu.html">Menu</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-colors" href="#why-us">Why Us</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-colors" href="cart.html">Stash</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-colors" href="#contact">Contact</a>
+<a class="text-on-surface-variant font-body-md hover:text-primary transition-colors" href="#">Privacy Policy</a>
+</div>
+<div class="font-label-mono text-on-background">
+                © 2024 Dollars Food. Everything is $1.
+            </div>
+</div>
+</footer>
+<script src="cart.js"></script>
+<script>
+        // Dollar Meter Progress Logic
+        window.onscroll = function() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            document.getElementById("meterProgress").style.width = scrolled + "%";
+            
+            // Subtle rotation animation for the dollar badge on scroll
+            const dollarBadge = document.querySelector('#dollarMeter > div:first-child');
+            dollarBadge.style.transform = `rotate(${winScroll * 0.1}deg)`;
+        };
+
+        // Micro-interactions for buttons
+        document.querySelectorAll('.active-press').forEach(btn => {
+            btn.addEventListener('mousedown', () => {
+                btn.classList.add('active-press');
+            });
+        });
+    </script>
+</body></html>
