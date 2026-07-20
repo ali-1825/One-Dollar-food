@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Orders | DOLLARS FOOD</title>
+<link href="../perf.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Poppins:wght@400;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'border-black': '#241608',
+        'background-cream': '#FFF6E5',
+        'primary': '#bb152c',
+        'tertiary': '#006a35',
+        'error': '#ba1a1a'
+      },
+      fontFamily: {
+        display: ['"Bricolage Grotesque"', 'sans-serif'],
+        body: ['Poppins', 'sans-serif'],
+        mono: ['"Space Mono"', 'monospace']
+      }
+    }
+  }
+};
+</script>
+<style>
+.neo-shadow { box-shadow: 8px 8px 0 0 #241608; }
+</style>
+</head>
+<body class="bg-background-cream text-border-black font-body min-h-screen">
+<header class="border-b-[3px] border-border-black bg-white px-4 py-4 md:px-8 flex flex-wrap items-center justify-between gap-4">
+<div>
+<h1 class="font-display text-2xl md:text-3xl uppercase">Orders Dashboard</h1>
+<p class="text-sm text-neutral-700">Submitted website orders</p>
+</div>
+<button class="border-[3px] border-border-black px-4 py-2 font-mono text-xs uppercase bg-white" id="logout-btn" type="button">Logout</button>
+</header>
+<main class="max-w-7xl mx-auto p-4 md:p-8 space-y-6">
+<div class="hidden border-[3px] border-primary bg-red-50 p-4 font-mono text-sm" id="testing-warning">
+Testing mode is enabled. Change the admin credentials before production use.
+</div>
+<section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-white border-[3px] border-border-black p-4 neo-shadow"><p class="font-mono text-xs uppercase">Total Orders</p><p class="font-display text-2xl" id="stat-total">0</p></div>
+<div class="bg-white border-[3px] border-border-black p-4 neo-shadow"><p class="font-mono text-xs uppercase">Today</p><p class="font-display text-2xl" id="stat-today">0</p></div>
+<div class="bg-white border-[3px] border-border-black p-4 neo-shadow"><p class="font-mono text-xs uppercase">Total Value</p><p class="font-display text-2xl" id="stat-value">PKR 0.00</p></div>
+<div class="bg-white border-[3px] border-border-black p-4 neo-shadow"><p class="font-mono text-xs uppercase">WhatsApp Failures</p><p class="font-display text-2xl" id="stat-failures">0</p></div>
+</section>
+<section class="bg-white border-[3px] border-border-black p-4 md:p-6 neo-shadow">
+<div class="flex flex-col md:flex-row gap-3 md:items-end mb-6">
+<div class="flex-1">
+<label class="font-mono text-xs uppercase block mb-2" for="search-input">Search</label>
+<input class="w-full border-[3px] border-border-black p-3 bg-background-cream" id="search-input" placeholder="Order ID, customer, phone" type="search"/>
+</div>
+<div>
+<label class="font-mono text-xs uppercase block mb-2" for="status-filter">Status</label>
+<select class="border-[3px] border-border-black p-3 bg-background-cream" id="status-filter">
+<option value="">All</option>
+<option value="received">Received</option>
+<option value="confirmed">Confirmed</option>
+<option value="cancelled">Cancelled</option>
+</select>
+</div>
+<button class="border-[3px] border-border-black px-4 py-3 font-mono text-xs uppercase bg-primary text-white" id="refresh-btn" type="button">Refresh</button>
+</div>
+<p aria-live="polite" class="text-sm min-h-[20px] mb-4" id="orders-status" role="status"></p>
+<div class="hidden md:block overflow-x-auto">
+<table class="w-full text-sm">
+<thead>
+<tr class="border-b-[3px] border-border-black text-left font-mono text-xs uppercase">
+<th class="py-3 pr-3">Order ID</th>
+<th class="py-3 pr-3">Date and time</th>
+<th class="py-3 pr-3">Customer</th>
+<th class="py-3 pr-3">Phone</th>
+<th class="py-3 pr-3">Items</th>
+<th class="py-3 pr-3">Total</th>
+<th class="py-3 pr-3">Payment method</th>
+<th class="py-3 pr-3">Status</th>
+<th class="py-3 pr-3">Business WhatsApp</th>
+<th class="py-3 pr-3">Customer WhatsApp</th>
+<th class="py-3">View</th>
+</tr>
+</thead>
+<tbody id="orders-table-body"></tbody>
+</table>
+</div>
+<div class="md:hidden space-y-4" id="orders-card-list"></div>
+<div class="hidden text-center py-12" id="empty-state">
+<p class="font-display text-xl uppercase mb-2">No orders yet</p>
+<p class="text-sm text-neutral-700">Submitted orders will appear here.</p>
+</div>
+</section>
+</main>
+<script src="admin.js"></script>
+<script>
+(function () {
+  var admin = window.DollarsFoodAdmin;
+  var tableBody = document.getElementById('orders-table-body');
+  var cardList = document.getElementById('orders-card-list');
+  var emptyState = document.getElementById('empty-state');
+  var ordersStatus = document.getElementById('orders-status');
+  var searchInput = document.getElementById('search-input');
+  var statusFilter = document.getElementById('status-filter');
+
+  function addCell(row, text) {
+    var cell = document.createElement('td');
+    cell.className = 'py-3 pr-3';
+    cell.textContent = text;
+    row.appendChild(cell);
+  }
+
+  function buildQuery() {
+    var params = new URLSearchParams();
+    if (searchInput.value.trim()) params.set('search', searchInput.value.trim());
+    if (statusFilter.value) params.set('status', statusFilter.value);
+    var query = params.toString();
+    return query ? '/api/admin/orders?' + query : '/api/admin/orders';
+  }
+
+  function renderOrders(orders) {
+    tableBody.innerHTML = '';
+    cardList.innerHTML = '';
+    emptyState.classList.toggle('hidden', orders.length > 0);
+
+    orders.forEach(function (order) {
+      var row = document.createElement('tr');
+      row.className = 'border-b border-neutral-200 align-top';
+      addCell(row, order.id);
+      addCell(row, admin.formatDate(order.createdAt));
+      addCell(row, order.customerName);
+      addCell(row, order.customerPhone);
+      addCell(row, order.itemSummary);
+      addCell(row, admin.formatMoney(order.total));
+      addCell(row, order.paymentMethod);
+      addCell(row, order.status);
+      addCell(row, admin.statusBadge(order.businessWhatsApp));
+      addCell(row, admin.statusBadge(order.customerWhatsApp));
+
+      var viewCell = document.createElement('td');
+      viewCell.className = 'py-3';
+      var viewLink = document.createElement('a');
+      viewLink.className = 'underline font-mono text-xs uppercase';
+      viewLink.href = '/admin/orders/' + encodeURIComponent(order.id);
+      viewLink.textContent = 'View';
+      viewCell.appendChild(viewLink);
+      row.appendChild(viewCell);
+      tableBody.appendChild(row);
+
+      var card = document.createElement('article');
+      card.className = 'border-[3px] border-border-black p-4 bg-background-cream space-y-2';
+      [
+        order.id,
+        order.customerName,
+        order.customerPhone,
+        order.itemSummary,
+        admin.formatMoney(order.total),
+        order.status.toUpperCase()
+      ].forEach(function (line, index) {
+        var paragraph = document.createElement('p');
+        paragraph.className = index === 1 ? 'font-display text-lg' : index === 4 ? 'font-display' : 'text-sm';
+        paragraph.textContent = line;
+        card.appendChild(paragraph);
+      });
+
+      var cardLink = document.createElement('a');
+      cardLink.className = 'inline-block underline font-mono text-xs uppercase';
+      cardLink.href = '/admin/orders/' + encodeURIComponent(order.id);
+      cardLink.textContent = 'View';
+      card.appendChild(cardLink);
+      cardList.appendChild(card);
+    });
+  }
+
+  async function loadOrders() {
+    admin.setText(ordersStatus, 'Loading orders...');
+    var result = await admin.getJson(buildQuery());
+
+    if (result.status === 401) {
+      window.location.href = '/admin/login';
+      return;
+    }
+
+    if (!result.ok || !result.data.success) {
+      admin.setText(ordersStatus, result.data.error || 'Could not load orders.');
+      return;
+    }
+
+    admin.showWarning(document.getElementById('testing-warning'), result.data.insecureMode);
+    admin.setText(document.getElementById('stat-total'), result.data.summary.totalOrders);
+    admin.setText(document.getElementById('stat-today'), result.data.summary.ordersToday);
+    admin.setText(document.getElementById('stat-value'), admin.formatMoney(result.data.summary.totalValue));
+    admin.setText(document.getElementById('stat-failures'), result.data.summary.whatsAppFailures);
+    renderOrders(result.data.orders || []);
+    admin.setText(ordersStatus, '');
+  }
+
+  document.getElementById('logout-btn').addEventListener('click', async function () {
+    await admin.postJson('/api/admin/logout', {});
+    window.location.href = '/admin/login';
+  });
+
+  document.getElementById('refresh-btn').addEventListener('click', loadOrders);
+  searchInput.addEventListener('input', loadOrders);
+  statusFilter.addEventListener('change', loadOrders);
+  loadOrders();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Order Details | DOLLARS FOOD</title>
+<link href="../perf.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Poppins:wght@400;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'border-black': '#241608',
+        'background-cream': '#FFF6E5',
+        'primary': '#bb152c'
+      },
+      fontFamily: {
+        display: ['"Bricolage Grotesque"', 'sans-serif'],
+        body: ['Poppins', 'sans-serif'],
+        mono: ['"Space Mono"', 'monospace']
+      }
+    }
+  }
+};
+</script>
+<style>.neo-shadow { box-shadow: 8px 8px 0 0 #241608; }</style>
+</head>
+<body class="bg-background-cream text-border-black font-body min-h-screen">
+<header class="border-b-[3px] border-border-black bg-white px-4 py-4 md:px-8 flex flex-wrap items-center justify-between gap-4">
+<div>
+<a class="font-mono text-xs uppercase underline" href="/admin/orders">Back to orders</a>
+<h1 class="font-display text-2xl md:text-3xl uppercase mt-2">Order Details</h1>
+</div>
+<button class="border-[3px] border-border-black px-4 py-2 font-mono text-xs uppercase bg-white" id="logout-btn" type="button">Logout</button>
+</header>
+<main class="max-w-4xl mx-auto p-4 md:p-8">
+<p aria-live="polite" class="text-sm min-h-[20px] mb-4" id="detail-status" role="status"></p>
+<section class="hidden bg-white border-[3px] border-border-black p-6 neo-shadow space-y-6" id="order-detail">
+<div>
+<p class="font-mono text-xs uppercase">Order ID</p>
+<p class="font-display text-2xl" id="detail-id"></p>
+<p class="text-sm mt-2" id="detail-created"></p>
+</div>
+<div class="grid md:grid-cols-2 gap-4">
+<div><p class="font-mono text-xs uppercase">Customer</p><p id="detail-customer"></p></div>
+<div><p class="font-mono text-xs uppercase">Phone</p><p id="detail-phone"></p></div>
+</div>
+<div><p class="font-mono text-xs uppercase">Delivery Address</p><p id="detail-address"></p></div>
+<div>
+<p class="font-mono text-xs uppercase mb-2">Items</p>
+<ul class="space-y-2" id="detail-items"></ul>
+</div>
+<div class="grid md:grid-cols-2 gap-4 border-t border-neutral-200 pt-4">
+<div><p class="font-mono text-xs uppercase">Subtotal</p><p id="detail-subtotal"></p></div>
+<div><p class="font-mono text-xs uppercase">Delivery Fee</p><p id="detail-delivery"></p></div>
+<div><p class="font-mono text-xs uppercase">Final Total</p><p class="font-display text-xl" id="detail-total"></p></div>
+<div><p class="font-mono text-xs uppercase">Payment Method</p><p id="detail-payment"></p></div>
+</div>
+<div><p class="font-mono text-xs uppercase">Customer Notes</p><p id="detail-notes"></p></div>
+<div><p class="font-mono text-xs uppercase">Status</p><p class="uppercase" id="detail-status-value"></p></div>
+<div class="grid md:grid-cols-2 gap-4 border-t border-neutral-200 pt-4">
+<div>
+<p class="font-mono text-xs uppercase">Business WhatsApp</p>
+<p id="detail-business-result"></p>
+<p class="text-xs mt-1" id="detail-business-id"></p>
+</div>
+<div>
+<p class="font-mono text-xs uppercase">Customer WhatsApp</p>
+<p id="detail-customer-result"></p>
+<p class="text-xs mt-1" id="detail-customer-id"></p>
+</div>
+</div>
+</section>
+</main>
+<script src="admin.js"></script>
+<script>
+(function () {
+  var admin = window.DollarsFoodAdmin;
+  var detailStatus = document.getElementById('detail-status');
+  var detailSection = document.getElementById('order-detail');
+
+  function getOrderIdFromPath() {
+    var parts = window.location.pathname.split('/').filter(Boolean);
+    return decodeURIComponent(parts[parts.length - 1] || '');
+  }
+
+  function renderNotification(prefix, notification) {
+    admin.setText(document.getElementById(prefix + '-result'), notification.success ? 'Sent successfully' : (notification.error || 'Delivery failed'));
+    admin.setText(document.getElementById(prefix + '-id'), notification.providerMessageId ? 'Message ID: ' + notification.providerMessageId : '');
+  }
+
+  function renderOrder(order) {
+    admin.setText(document.getElementById('detail-id'), order.id);
+    admin.setText(document.getElementById('detail-created'), admin.formatDate(order.createdAt));
+    admin.setText(document.getElementById('detail-customer'), order.customer.name);
+    admin.setText(document.getElementById('detail-phone'), order.customer.phone);
+    admin.setText(document.getElementById('detail-address'), order.customer.address);
+
+    var itemsEl = document.getElementById('detail-items');
+    itemsEl.innerHTML = '';
+    order.items.forEach(function (item) {
+      var li = document.createElement('li');
+      li.className = 'border-[2px] border-border-black p-3 bg-background-cream';
+      li.textContent = item.quantity + ' × ' + item.name + ' — ' + admin.formatMoney(item.unitPrice) + ' each, line total ' + admin.formatMoney(item.lineTotal);
+      itemsEl.appendChild(li);
+    });
+
+    admin.setText(document.getElementById('detail-subtotal'), admin.formatMoney(order.subtotal));
+    admin.setText(document.getElementById('detail-delivery'), admin.formatMoney(order.deliveryFee));
+    admin.setText(document.getElementById('detail-total'), admin.formatMoney(order.total));
+    admin.setText(document.getElementById('detail-payment'), order.paymentMethod);
+    admin.setText(document.getElementById('detail-notes'), order.notes || 'None');
+    admin.setText(document.getElementById('detail-status-value'), order.status);
+    renderNotification('detail-business', order.notifications.business);
+    renderNotification('detail-customer', order.notifications.customer);
+    detailSection.classList.remove('hidden');
+  }
+
+  async function loadOrder() {
+    var orderId = getOrderIdFromPath();
+    if (!orderId) {
+      admin.setText(detailStatus, 'Order ID is missing.');
+      return;
+    }
+
+    admin.setText(detailStatus, 'Loading order...');
+    var result = await admin.getJson('/api/admin/orders/' + encodeURIComponent(orderId));
+
+    if (result.status === 401) {
+      window.location.href = '/admin/login';
+      return;
+    }
+
+    if (!result.ok || !result.data.success) {
+      admin.setText(detailStatus, result.data.error || 'Could not load order.');
+      return;
+    }
+
+    renderOrder(result.data.order);
+    admin.setText(detailStatus, '');
+  }
+
+  document.getElementById('logout-btn').addEventListener('click', async function () {
+    await admin.postJson('/api/admin/logout', {});
+    window.location.href = '/admin/login';
+  });
+
+  loadOrder();
+})();
+</script>
+</body>
+</html>

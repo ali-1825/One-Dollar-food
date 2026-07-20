@@ -360,14 +360,20 @@
 </div>
 </div>
 <div class="space-y-2">
-<label class="font-label-mono text-on-background uppercase tracking-wider block ml-2">Delivery Address</label>
+<label class="font-label-mono text-on-background uppercase tracking-wider block ml-2" for="home-order-address">Delivery Address</label>
 <input class="w-full p-4 border-[3px] border-black rounded-xl brutalist-shadow-sm focus:ring-0 focus:border-primary focus:shadow-[8px_8px_0px_0px_rgba(183,16,42,1)] transition-all bg-white outline-none" id="home-order-address" placeholder="Your full address" type="text"/>
 </div>
+<div class="space-y-2">
+<label class="font-label-mono text-on-background uppercase tracking-wider block ml-2" for="home-order-notes">Order Notes (Optional)</label>
+<textarea class="w-full p-4 border-[3px] border-black rounded-xl brutalist-shadow-sm focus:ring-0 focus:border-primary focus:shadow-[8px_8px_0px_0px_rgba(183,16,42,1)] transition-all bg-white outline-none min-h-[96px] resize-y" id="home-order-notes" maxlength="500" placeholder="Tell us what you want to order"></textarea>
+</div>
+<input autocomplete="off" class="hidden" id="home-order-honeypot" name="_honeypot" tabindex="-1" type="text"/>
 <div class="flex flex-col items-center">
-<button class="w-full md:w-auto min-w-[300px] bg-tertiary-container text-white font-display text-2xl py-6 px-12 rounded-full border-[4px] border-black brutalist-shadow active-press transition-all flex items-center justify-center gap-4 group" type="submit">
+<button class="w-full md:w-auto min-w-[300px] bg-tertiary-container text-white font-display text-2xl py-6 px-12 rounded-full border-[4px] border-black brutalist-shadow active-press transition-all flex items-center justify-center gap-4 group" id="home-order-submit" type="submit">
                         ORDER NOW
                         <span class="material-symbols-outlined text-3xl group-hover:translate-x-2 transition-transform">arrow_forward</span>
 </button>
+<p aria-live="polite" class="mt-4 font-body-md text-center min-h-[24px]" id="home-order-status" role="status"></p>
 <p class="mt-6 font-label-mono text-sm text-on-surface-variant uppercase italic">Limited time offer: Every item is $1 only!</p>
 </div>
 </form>
@@ -438,23 +444,58 @@
         document.getElementById('home-order-form').addEventListener('submit', function (event) {
             event.preventDefault();
             var cartApi = window.DollarsFoodCart;
+            var submitBtn = document.getElementById('home-order-submit');
+            var statusEl = document.getElementById('home-order-status');
             var name = document.getElementById('home-order-name').value.trim();
             var phone = document.getElementById('home-order-phone').value.trim();
             var address = document.getElementById('home-order-address').value.trim();
+            var notes = document.getElementById('home-order-notes').value.trim();
+            var honeypot = document.getElementById('home-order-honeypot').value.trim();
             var cart = cartApi.getCart();
 
+            function setStatus(message, type) {
+                statusEl.textContent = message || '';
+                statusEl.className = 'mt-4 font-body-md text-center min-h-[24px] ' + (type === 'error' ? 'text-error' : type === 'success' ? 'text-tertiary' : 'text-on-surface-variant');
+            }
+
+            if (submitBtn.disabled) return;
+
             if (!name || !phone || !address) {
-                alert('Please enter your name, phone, and address.');
+                setStatus('Please enter your name, phone, and address.', 'error');
                 return;
             }
+
+            var items = cart.length
+                ? cart.slice()
+                : [{ id: 'custom-order', name: 'Custom Website Order', quantity: 1, price: 1 }];
+
+            submitBtn.disabled = true;
+            setStatus('Submitting your order...', '');
 
             cartApi.submitOrder({
                 name: name,
                 phone: phone,
                 address: address,
-                items: cart.length ? cart.slice() : [{ name: 'Custom order (contact customer)', quantity: 1, price: 0 }],
-                total: cart.length ? cartApi.getCartTotal() : 0,
-                note: cart.length ? '' : 'Customer submitted order form without menu items.'
+                items: items,
+                paymentMethod: 'Cash on Delivery',
+                notes: notes || (cart.length ? '' : 'Customer submitted order form without menu items.'),
+                source: 'home-form',
+                _honeypot: honeypot
+            }, { clearCart: false }).then(function (result) {
+                if (result.success) {
+                    if (cart.length) cartApi.clearCart();
+                    setStatus(result.message + ' Order ID: ' + result.orderId, 'success');
+                    setTimeout(function () {
+                        window.location.href = 'Main Page.html';
+                    }, 1800);
+                    return;
+                }
+
+                setStatus(result.error || 'Could not place order. Please call 0324 5972524.', 'error');
+                submitBtn.disabled = false;
+            }).catch(function () {
+                setStatus('Could not place order. Please try again or call 0324 5972524.', 'error');
+                submitBtn.disabled = false;
             });
         });
     </script>

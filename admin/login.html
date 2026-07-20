@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Login | DOLLARS FOOD</title>
+<link href="../perf.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Poppins:wght@400;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'border-black': '#241608',
+        'background-cream': '#FFF6E5',
+        'primary': '#bb152c',
+        'tertiary': '#006a35',
+        'error': '#ba1a1a'
+      },
+      fontFamily: {
+        display: ['"Bricolage Grotesque"', 'sans-serif'],
+        body: ['Poppins', 'sans-serif'],
+        mono: ['"Space Mono"', 'monospace']
+      }
+    }
+  }
+};
+</script>
+<style>
+.neo-shadow { box-shadow: 8px 8px 0 0 #241608; }
+</style>
+</head>
+<body class="bg-background-cream text-border-black font-body min-h-screen flex items-center justify-center p-6">
+<main class="w-full max-w-md bg-white border-[3px] border-border-black p-8 neo-shadow">
+<h1 class="font-display text-3xl uppercase mb-2">Admin Login</h1>
+<p class="text-sm mb-8 text-neutral-700">Sign in to view submitted website orders.</p>
+<form class="space-y-5" id="login-form">
+<div>
+<label class="font-mono text-xs uppercase block mb-2" for="username">Username</label>
+<input autocomplete="username" class="w-full border-[3px] border-border-black p-3 bg-background-cream" id="username" name="username" required type="text"/>
+</div>
+<div>
+<label class="font-mono text-xs uppercase block mb-2" for="password">Password</label>
+<input autocomplete="current-password" class="w-full border-[3px] border-border-black p-3 bg-background-cream" id="password" name="password" required type="password"/>
+</div>
+<button class="w-full bg-primary text-white border-[3px] border-border-black py-3 font-display uppercase" id="login-btn" type="submit">Sign In</button>
+<p aria-live="polite" class="text-error text-sm min-h-[20px] mt-4" id="login-status" role="alert"></p>
+</form>
+</main>
+<script src="admin.js"></script>
+<script>
+(function () {
+  var admin = window.DollarsFoodAdmin;
+  var form = document.getElementById('login-form');
+  var statusEl = document.getElementById('login-status');
+  var loginBtn = document.getElementById('login-btn');
+
+  form.addEventListener('submit', async function (event) {
+    event.preventDefault();
+    if (loginBtn.disabled) return;
+
+    admin.setText(statusEl, 'Signing in...');
+    loginBtn.disabled = true;
+
+    var result = await admin.postJson('/api/admin/login', {
+      username: document.getElementById('username').value.trim(),
+      password: document.getElementById('password').value
+    });
+
+    if (result.ok && result.data.success) {
+      window.location.href = '/admin/orders';
+      return;
+    }
+
+    admin.setText(statusEl, result.data.error || 'Invalid username or password.');
+    loginBtn.disabled = false;
+  });
+})();
+</script>
+</body>
+</html>

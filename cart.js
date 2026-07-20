@@ -136,15 +136,65 @@
 
   function submitOrder(orderDetails, options) {
     options = options || {};
-    var whatsappUrl = buildWhatsAppOrderUrl(orderDetails);
+    var config = window.SiteConfig || { orderApiUrl: '/api/order' };
+    var apiUrl = config.orderApiUrl || '/api/order';
 
-    if (options.clearCart !== false) {
-      clearCart();
-    }
+    var payload = {
+      customerName: orderDetails.name,
+      phone: orderDetails.phone,
+      address: orderDetails.address,
+      items: (orderDetails.items || []).map(function (item) {
+        return {
+          id: item.id,
+          quantity: item.quantity
+        };
+      }),
+      paymentMethod: orderDetails.paymentMethod || 'Cash on Delivery',
+      notes: orderDetails.notes || '',
+      source: orderDetails.source || 'checkout',
+      _honeypot: orderDetails._honeypot || ''
+    };
 
-    window.location.href = whatsappUrl;
+    return fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(function (response) {
+        return response.text().then(function (text) {
+          var data = {};
+          try {
+            data = text ? JSON.parse(text) : {};
+          } catch (parseError) {
+            data = { success: false, error: 'Invalid server response.' };
+          }
+          return { ok: response.ok, data: data };
+        });
+      })
+      .then(function (result) {
+        if (result.ok && result.data.success) {
+          if (options.clearCart !== false) {
+            clearCart();
+          }
+          return {
+            success: true,
+            orderId: result.data.orderId,
+            message: result.data.message
+          };
+        }
 
-    return Promise.resolve({ success: true });
+        return {
+          success: false,
+          orderId: result.data.orderId,
+          error: result.data.error || 'Could not place order.'
+        };
+      })
+      .catch(function () {
+        return {
+          success: false,
+          error: 'Could not reach order server. Please try again or call 0324 5972524.'
+        };
+      });
   }
 
   function bindAddToCartButtons() {

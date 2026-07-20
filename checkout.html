@@ -224,6 +224,11 @@
 </div>
 </div>
 </section>
+<div class="flex flex-col gap-2">
+<label class="font-label-mono text-label-mono uppercase" for="checkout-notes">Order Notes (Optional)</label>
+<textarea class="bg-background-cream border-3 border-border-black p-3 font-body-md focus:shadow-none transition-all min-h-[96px] resize-y" id="checkout-notes" maxlength="500" placeholder="Extra sauce, gate code, delivery instructions..."></textarea>
+</div>
+<input autocomplete="off" class="hidden" id="checkout-honeypot" name="_honeypot" tabindex="-1" type="text"/>
 </div>
 <!-- Right Column: Order Summary -->
 <aside class="lg:col-span-5">
@@ -252,7 +257,8 @@
                             <span class="material-symbols-outlined transition-transform group-hover:translate-x-2">arrow_forward</span>
 </span>
 </button>
-<p class="text-center font-label-mono text-[10px] uppercase mt-4 text-on-surface-variant">WhatsApp will open with your order ready to send.</p>
+<p class="text-center font-label-mono text-[10px] uppercase mt-4 text-on-surface-variant">Your order will be sent securely to the restaurant.</p>
+<div aria-live="polite" class="mt-4 text-center font-body-md" id="order-status" role="status"></div>
 </div>
 </aside>
 </div>
@@ -281,6 +287,13 @@
 <script src="perf.js" defer></script>
 <script defer>
         const confirmBtn = document.getElementById('confirm-btn');
+        const orderStatus = document.getElementById('order-status');
+        const defaultBtnHtml = confirmBtn.innerHTML;
+
+        function setOrderStatus(message, type) {
+            orderStatus.textContent = message || '';
+            orderStatus.className = 'mt-4 text-center font-body-md ' + (type === 'error' ? 'text-error' : type === 'success' ? 'text-tertiary' : 'text-on-surface-variant');
+        }
 
         confirmBtn.addEventListener('mousedown', () => {
             confirmBtn.classList.add('active-btn');
@@ -291,42 +304,74 @@
         });
 
         confirmBtn.addEventListener('click', function () {
+            if (confirmBtn.disabled) return;
+
             const cartApi = window.DollarsFoodCart;
             const cart = cartApi.getCart();
-            if (cart.length === 0) return;
+            if (cart.length === 0) {
+                setOrderStatus('Your cart is empty. Add items before placing an order.', 'error');
+                return;
+            }
 
             const firstName = document.getElementById('checkout-first-name').value.trim();
             const lastName = document.getElementById('checkout-last-name').value.trim();
             const phone = document.getElementById('checkout-phone').value.trim();
             const street = document.getElementById('checkout-address').value.trim();
             const city = document.getElementById('checkout-city').value.trim();
+            const notes = document.getElementById('checkout-notes').value.trim();
+            const honeypot = document.getElementById('checkout-honeypot').value.trim();
             const fullName = [firstName, lastName].filter(Boolean).join(' ');
             const fullAddress = [street, city].filter(Boolean).join(', ');
 
             if (!firstName) {
-                alert('Please enter your first name.');
+                setOrderStatus('Please enter your first name.', 'error');
                 return;
             }
 
             if (!phone) {
-                alert('Please enter your phone number.');
+                setOrderStatus('Please enter your phone number.', 'error');
                 return;
             }
 
             if (!street || !city) {
-                alert('Please enter your full delivery address.');
+                setOrderStatus('Please enter your full delivery address.', 'error');
                 return;
             }
 
             confirmBtn.disabled = true;
-            confirmBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2"><span class="material-symbols-outlined">hourglass_top</span> OPENING WHATSAPP...</span>';
+            confirmBtn.classList.add('opacity-70', 'pointer-events-none');
+            confirmBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2"><span class="material-symbols-outlined">hourglass_top</span> PLACING ORDER...</span>';
+            setOrderStatus('Submitting your order...', '');
 
             cartApi.submitOrder({
                 name: fullName,
                 phone: phone,
                 address: fullAddress,
                 items: cart.slice(),
-                total: cartApi.getCartTotal()
+                paymentMethod: 'Cash on Delivery',
+                notes: notes,
+                source: 'checkout',
+                _honeypot: honeypot
+            }, { clearCart: false }).then(function (result) {
+                if (result.success) {
+                    cartApi.clearCart();
+                    setOrderStatus(result.message + ' Order ID: ' + result.orderId, 'success');
+                    confirmBtn.innerHTML = '<span class="relative z-10 flex items-center justify-center gap-2"><span class="material-symbols-outlined">check_circle</span> ORDER RECEIVED</span>';
+                    setTimeout(function () {
+                        window.location.href = 'Main Page.html';
+                    }, 1800);
+                    return;
+                }
+
+                setOrderStatus(result.error || 'Could not place order. Please call 0324 5972524.', 'error');
+                confirmBtn.disabled = false;
+                confirmBtn.classList.remove('opacity-70', 'pointer-events-none');
+                confirmBtn.innerHTML = defaultBtnHtml;
+            }).catch(function () {
+                setOrderStatus('Could not place order. Please try again or call 0324 5972524.', 'error');
+                confirmBtn.disabled = false;
+                confirmBtn.classList.remove('opacity-70', 'pointer-events-none');
+                confirmBtn.innerHTML = defaultBtnHtml;
             });
         });
     </script>
