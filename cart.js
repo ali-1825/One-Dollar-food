@@ -97,7 +97,7 @@
   }
 
   function buildWhatsAppOrderUrl(orderDetails) {
-    var config = window.SiteConfig || { whatsapp: '923211234567' };
+    var config = window.SiteConfig || { whatsapp: '923245972524' };
     var lines = ['New order - Dollars Food'];
     if (orderDetails.name) lines.push('Name: ' + orderDetails.name);
     if (orderDetails.phone) lines.push('Phone: ' + orderDetails.phone);

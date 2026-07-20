@@ -1,7 +1,7 @@
 window.SiteConfig = {
-  phoneTel: '+923211234567',
-  phoneDisplay: '0321 1234567',
-  phoneIntl: '+92 321 1234567',
-  whatsapp: '923211234567',
+  phoneTel: '+923245972524',
+  phoneDisplay: '0324 5972524',
+  phoneIntl: '+92 324 5972524',
+  whatsapp: '923245972524',
   instagram: 'dollarsfood'
 };
