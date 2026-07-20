@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DOLLARS FOOD | FULL MENU</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Poppins:wght@400;600;700&family=Space+Mono:wght@700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@100..900&family=Poppins:wght@100..900&family=Space+Mono:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 48;
+        }
+        .neo-shadow {
+            box-shadow: 6px 6px 0px 0px rgba(36,22,8,1);
+        }
+        .neo-shadow-sm {
+            box-shadow: 4px 4px 0px 0px rgba(36,22,8,1);
+        }
+        .active-press:active {
+            transform: translate(6px, 6px);
+            box-shadow: 0px 0px 0px 0px rgba(36,22,8,1);
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marquee 20s linear infinite;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 12px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #FFF6E5;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #241608;
+            border: 3px solid #FFF6E5;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#fff8f5",
+                    "secondary": "#775a00",
+                    "primary-container": "#db313f",
+                    "outline-variant": "#e4bebc",
+                    "border-black": "#241608",
+                    "inverse-surface": "#3e2d1d",
+                    "on-tertiary-container": "#f6fff4",
+                    "surface-variant": "#faddc6",
+                    "on-tertiary-fixed": "#00210c",
+                    "error": "#ba1a1a",
+                    "tertiary": "#006a35",
+                    "on-surface-variant": "#5b403f",
+                    "surface": "#fff8f5",
+                    "surface-container": "#ffeada",
+                    "on-primary-fixed": "#410007",
+                    "on-secondary-container": "#6f5400",
+                    "background-cream": "#FFF6E5",
+                    "surface-container-low": "#fff1e7",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#bb152c",
+                    "on-primary-container": "#fffbff",
+                    "tertiary-fixed": "#6bfe9c",
+                    "tertiary-container": "#008645",
+                    "surface-container-highest": "#faddc6",
+                    "on-background": "#27190a",
+                    "inverse-on-surface": "#ffeee1",
+                    "secondary-fixed": "#ffdf9a",
+                    "background": "#fff8f5",
+                    "surface-container-high": "#ffe3cc",
+                    "shadow-black": "#241608",
+                    "on-secondary-fixed": "#251a00",
+                    "primary": "#b7102a",
+                    "primary-fixed-dim": "#ffb3b1",
+                    "on-surface": "#27190a",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed-dim": "#4ae183",
+                    "inverse-primary": "#ffb3b1",
+                    "outline": "#8f6f6e",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed-variant": "#92001c",
+                    "surface-dim": "#f1d5be",
+                    "primary-fixed": "#ffdad8",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "secondary-container": "#fdc73a",
+                    "on-secondary-fixed-variant": "#5a4300",
+                    "secondary-fixed-dim": "#f4bf32",
+                    "on-tertiary-fixed-variant": "#005228",
+                    "on-primary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "shadow-offset": "6px",
+                    "margin-desktop": "64px",
+                    "unit": "8px",
+                    "margin-mobile": "16px",
+                    "gutter": "24px",
+                    "border-width": "3px"
+            },
+            "fontFamily": {
+                    "price-display": ["Space Mono"],
+                    "display": ["Bricolage Grotesque"],
+                    "body-lg": ["Poppins"],
+                    "headline-md": ["Bricolage Grotesque"],
+                    "headline-lg-mobile": ["Bricolage Grotesque"],
+                    "headline-lg": ["Bricolage Grotesque"],
+                    "label-mono": ["Space Mono"],
+                    "body-md": ["Poppins"]
+            }
+          }
+        }
+      }
+    </script>
+</head>
+<body class="bg-background-cream text-on-background font-body-md custom-scrollbar overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-50 bg-background-cream dark:bg-on-background border-b-3 border-border-black shadow-[6px_6px_0px_0px_rgba(36,22,8,1)] flex justify-between items-center px-margin-mobile h-20">
+<div class="flex items-center gap-4">
+<a class="font-display text-headline-lg-mobile font-extrabold text-primary -rotate-2 hover:opacity-80 transition-opacity" href="Main Page.html">DOLLARS FOOD</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-6 font-display text-headline-md">
+<a class="text-primary hover:translate-x-[2px] hover:translate-y-[2px] transition-all" href="Full menu.html">Menu</a>
+<a class="text-on-background hover:translate-x-[2px] hover:translate-y-[2px] transition-all" href="cart.html">Stash</a>
+<a class="text-on-background hover:translate-x-[2px] hover:translate-y-[2px] transition-all" href="Main Page.html#why-us">Deals</a>
+</div>
+<a class="relative bg-secondary-container border-3 border-border-black p-2 neo-shadow-sm active-press" href="cart.html">
+<span class="material-symbols-outlined text-border-black" data-icon="shopping_bag">shopping_bag</span>
+<span class="hidden absolute -top-2 -right-2 bg-primary text-white border-2 border-border-black text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full" data-cart-count>0</span>
+</a>
+</div>
+</header>
+<!-- Marquee Flash Deals -->
+<div class="bg-primary-container border-b-3 border-border-black py-3 overflow-hidden">
+<div class="animate-marquee whitespace-nowrap">
+<span class="font-label-mono text-white text-xl mx-8 uppercase">Everything is $1.00 • limited time offer • dopamine delivery • stay hungry • everything is $1.00 • limited time offer • dopamine delivery • stay hungry • </span>
+<span class="font-label-mono text-white text-xl mx-8 uppercase">Everything is $1.00 • limited time offer • dopamine delivery • stay hungry • everything is $1.00 • limited time offer • dopamine delivery • stay hungry • </span>
+</div>
+</div>
+<main class="max-w-7xl mx-auto px-margin-mobile py-12 pb-32">
+<!-- Categories Tabs (Desktop style) -->
+<div class="flex flex-wrap gap-4 mb-12 justify-center">
+<button class="px-8 py-4 bg-secondary-container border-3 border-border-black font-display text-headline-md neo-shadow active-press">Burgers</button>
+<button class="px-8 py-4 bg-background-cream border-3 border-border-black font-display text-headline-md neo-shadow active-press hover:bg-surface-variant">Fries</button>
+<button class="px-8 py-4 bg-background-cream border-3 border-border-black font-display text-headline-md neo-shadow active-press hover:bg-surface-variant">Wraps</button>
+<button class="px-8 py-4 bg-background-cream border-3 border-border-black font-display text-headline-md neo-shadow active-press hover:bg-surface-variant">Drinks</button>
+</div>
+<!-- Section: Burgers -->
+<div class="mb-16">
+<div class="flex items-center gap-4 mb-8">
+<h2 class="font-display text-headline-lg bg-primary-container text-white px-6 py-2 -rotate-1 border-3 border-border-black neo-shadow-sm">BURGERS</h2>
+<div class="h-1 flex-grow bg-border-black"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-gutter">
+<!-- Item Card 1 -->
+<div class="bg-white border-3 border-border-black neo-shadow group overflow-hidden transition-all flex flex-col">
+<div class="h-64 overflow-hidden relative border-b-3 border-border-black">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A juicy double cheeseburger with melting golden cheese, crisp green lettuce, and bright red tomatoes, set against a vibrant pop-art background with bold black outlines and a warm cream-colored palette. The lighting is high-contrast and energetic, emphasizing the rich textures of the sesame seed bun and the grilled beef patties." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8F6dNJ1qOoE-3I7WXMvKAXe0cVU1MON2WNPa3RKu5XgeUH49sqSv5mheLbtUK0qG5cjaxPH-mVjZ_CmxMrdBLlTtWPtTDhMp3vlzU4l2Iy2l4OPjjExBARqzlTDweC7UqeMERa1HUSISO_JV6Zb12apzc2w_xZ0UWyCCukUqFPlswRho86_y62gUv8qpDIfMH9QB-_osddFJmt6JFQebQtrHFRDYuZFRBcdaxD8N78gstEYMXFf4"/>
+<div class="absolute top-4 right-4 bg-secondary-container border-3 border-border-black px-3 py-1 font-price-display text-price-display neo-shadow-sm">$1</div>
+</div>
+<div class="p-5 flex-grow">
+<h3 class="font-headline-md text-border-black mb-2 uppercase">Double Dollar Smash</h3>
+<p class="font-body-md text-on-surface-variant line-clamp-2">Two smashed patties, secret sauce, and American cheese.</p>
+</div>
+<div class="p-5 pt-0 flex flex-col gap-2">
+<a class="block w-full bg-background-cream border-3 border-border-black py-2 text-border-black font-display text-sm neo-shadow-sm active-press text-center" href="Detail.html">VIEW DETAILS</a>
+<button class="w-full bg-primary border-3 border-border-black py-3 text-white font-display text-headline-md neo-shadow-sm active-press hover:bg-primary-container" data-add-to-cart data-item-id="double-dollar-smash" data-item-name="Double Dollar Smash" data-item-price="1" data-item-image="https://lh3.googleusercontent.com/aida-public/AB6AXuA8F6dNJ1qOoE-3I7WXMvKAXe0cVU1MON2WNPa3RKu5XgeUH49sqSv5mheLbtUK0qG5cjaxPH-mVjZ_CmxMrdBLlTtWPtTDhMp3vlzU4l2Iy2l4OPjjExBARqzlTDweC7UqeMERa1HUSISO_JV6Zb12apzc2w_xZ0UWyCCukUqFPlswRho86_y62gUv8qpDIfMH9QB-_osddFJmt6JFQebQtrHFRDYuZFRBcdaxD8N78gstEYMXFf4" data-item-description="Two smashed patties, secret sauce, and American cheese.">ADD TO BAG</button>
+</div>
+</div>
+<!-- Item Card 2 -->
+<div class="bg-white border-3 border-border-black neo-shadow group overflow-hidden transition-all flex flex-col">
+<div class="h-64 overflow-hidden relative border-b-3 border-border-black">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A spicy fried chicken burger with colorful coleslaw and jalapeños, captured in a dynamic neo-brutalist style. The image features high-key lighting, deep shadows, and a punchy color scheme of primary red and golden yellow. The background is a clean minimalist cream, allowing the bold outlines of the food to pop like a comic book panel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRZIZ9ooUuRDut9rtB3BZNAxQOnk0H4yL-Is7a-hm7OA2scXIj3ic04X2a8kCL5fLgisfBRHBX1ISz8nPRqSvxWx2i4LJDBq3_Kdw1PCSG0AdUmO2IPEnfBVkquVJ6c967HxyJNp77VAsZoI_ZW_j4DMZKdpW-miiHAKzOPgPSnXHd0OWi72Dk8V5uajZ4ZCmgAcEd83vRbX-1_v1CguWM5gjJ8cFc1gPqgvJeqwrC8Ip373-gsz4"/>
+<div class="absolute top-4 right-4 bg-secondary-container border-3 border-border-black px-3 py-1 font-price-display text-price-display neo-shadow-sm">$1</div>
+<div class="absolute top-4 left-4 bg-tertiary-container text-white border-3 border-border-black px-3 py-1 font-label-mono text-sm uppercase -rotate-6">Spicy</div>
+</div>
+<div class="p-5 flex-grow">
+<h3 class="font-headline-md text-border-black mb-2 uppercase">Inferno Chicken</h3>
+<p class="font-body-md text-on-surface-variant line-clamp-2">Crispy chicken breast with ghost pepper mayo and pickles.</p>
+</div>
+<div class="p-5 pt-0">
+<button class="w-full bg-primary border-3 border-border-black py-3 text-white font-display text-headline-md neo-shadow-sm active-press hover:bg-primary-container" data-add-to-cart data-item-id="inferno-chicken" data-item-name="Inferno Chicken" data-item-price="1" data-item-image="https://lh3.googleusercontent.com/aida-public/AB6AXuCRZIZ9ooUuRDut9rtB3BZNAxQOnk0H4yL-Is7a-hm7OA2scXIj3ic04X2a8kCL5fLgisfBRHBX1ISz8nPRqSvxWx2i4LJDBq3_Kdw1PCSG0AdUmO2IPEnfBVkquVJ6c967HxyJNp77VAsZoI_ZW_j4DMZKdpW-miiHAKzOPgPSnXHd0OWi72Dk8V5uajZ4ZCmgAcEd83vRbX-1_v1CguWM5gjJ8cFc1gPqgvJeqwrC8Ip373-gsz4" data-item-description="Crispy chicken breast with ghost pepper mayo and pickles.">ADD TO BAG</button>
+</div>
+</div>
+<!-- Item Card 3 -->
+<div class="bg-white border-3 border-border-black neo-shadow group overflow-hidden transition-all flex flex-col">
+<div class="h-64 overflow-hidden relative border-b-3 border-border-black">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A classic vegetarian burger with a large grilled portobello mushroom, balsamic glaze, and arugula. The visual style is pop-art inspired with heavy black strokes and vibrant blocks of green and cream. The scene is bright and high-energy, with a tactile, paper-texture finish that mimics modern street culture design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2Xl2opqzkR0rto29FRx4-dhPebDcw7-ogtpIxU3fpQ1y7_sXVjWa2l10kbkTISj44iwtLa_wdj6TxyIhuPwi4EeTf7Wyqnr9bGgfYnXO_uIuBZo9NdJuwjfPBcYuoo5VFbPTKX8RNnroXRR9Mkeywn4IexJ9CV_2GZ9yRCa7kwo3gRXpGfaX5F5F0c36HyBRMtnETrLwoTkZr1hDaRRil_eRw-TVPGlLYzI0ZahTb22WAi_YyVeQ"/>
+<div class="absolute top-4 right-4 bg-secondary-container border-3 border-border-black px-3 py-1 font-price-display text-price-display neo-shadow-sm">$1</div>
+</div>
+<div class="p-5 flex-grow">
+<h3 class="font-headline-md text-border-black mb-2 uppercase">Garden Gremlin</h3>
+<p class="font-body-md text-on-surface-variant line-clamp-2">Plant-based patty, avocado, and sprouts on a whole wheat bun.</p>
+</div>
+<div class="p-5 pt-0">
+<button class="w-full bg-primary border-3 border-border-black py-3 text-white font-display text-headline-md neo-shadow-sm active-press hover:bg-primary-container" data-add-to-cart data-item-id="garden-gremlin" data-item-name="Garden Gremlin" data-item-price="1" data-item-image="https://lh3.googleusercontent.com/aida-public/AB6AXuD2Xl2opqzkR0rto29FRx4-dhPebDcw7-ogtpIxU3fpQ1y7_sXVjWa2l10kbkTISj44iwtLa_wdj6TxyIhuPwi4EeTf7Wyqnr9bGgfYnXO_uIuBZo9NdJuwjfPBcYuoo5VFbPTKX8RNnroXRR9Mkeywn4IexJ9CV_2GZ9yRCa7kwo3gRXpGfaX5F5F0c36HyBRMtnETrLwoTkZr1hDaRRil_eRw-TVPGlLYzI0ZahTb22WAi_YyVeQ" data-item-description="Plant-based patty, avocado, and sprouts on a whole wheat bun.">ADD TO BAG</button>
+</div>
+</div>
+<!-- Item Card 4 -->
+<div class="bg-white border-3 border-border-black neo-shadow group overflow-hidden transition-all flex flex-col">
+<div class="h-64 overflow-hidden relative border-b-3 border-border-black">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A towering burger featuring an egg and bacon, styled with a high-contrast pop-art aesthetic. Bold black ink-trap borders define every layer. The lighting is vibrant and direct, casting sharp, non-diffused shadows. The overall mood is high-energy, commercial, and unapologetically playful, using a palette of red, gold, and cream." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAsH4q1Ryf1Sf1pPCRhV0swOw7jvfALX4Hw4Q_dfxhGKQpCY1Pts5GcaXFsMVXJqvbNSj2J6GbambLId46hIt2mGAiyum0m-wac2HrxJ5DmuwRQgo1oMxIiBoCFiP4UF4YdTbEjmnomQCBc-UroBH7_LrwnhZDgsxB61IcuQGIahcOAPJwFt-kTLNZfUrrW8UEzJUkllbnF2O8DUN8QULXUcBW_mDive4L4wOYd0EwDEQMK4X3wgk"/>
+<div class="absolute top-4 right-4 bg-secondary-container border-3 border-border-black px-3 py-1 font-price-display text-price-display neo-shadow-sm">$1</div>
+</div>
+<div class="p-5 flex-grow">
+<h3 class="font-headline-md text-border-black mb-2 uppercase">The Wake Up</h3>
+<p class="font-body-md text-on-surface-variant line-clamp-2">Fried egg, smoked bacon, and breakfast sauce.</p>
+</div>
+<div class="p-5 pt-0">
+<button class="w-full bg-primary border-3 border-border-black py-3 text-white font-display text-headline-md neo-shadow-sm active-press hover:bg-primary-container" data-add-to-cart data-item-id="the-wake-up" data-item-name="The Wake Up" data-item-price="1" data-item-image="https://lh3.googleusercontent.com/aida-public/AB6AXuBAsH4q1Ryf1Sf1pPCRhV0swOw7jvfALX4Hw4Q_dfxhGKQpCY1Pts5GcaXFsMVXJqvbNSj2J6GbambLId46hIt2mGAiyum0m-wac2HrxJ5DmuwRQgo1oMxIiBoCFiP4UF4YdTbEjmnomQCBc-UroBH7_LrwnhZDgsxB61IcuQGIahcOAPJwFt-kTLNZfUrrW8UEzJUkllbnF2O8DUN8QULXUcBW_mDive4L4wOYd0EwDEQMK4X3wgk" data-item-description="Fried egg, smoked bacon, and breakfast sauce.">ADD TO BAG</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Section: Fries -->
+<div class="mb-16">
+<div class="flex items-center gap-4 mb-8">
+<h2 class="font-display text-headline-lg bg-secondary-container text-on-secondary-container px-6 py-2 rotate-1 border-3 border-border-black neo-shadow-sm">FRIES</h2>
+<div class="h-1 flex-grow bg-border-black"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Fries 1 -->
+<div class="flex bg-white border-3 border-border-black neo-shadow h-48 group">
+<div class="w-1/3 border-r-3 border-border-black overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform" data-alt="Golden crinkle-cut fries overflowing from a red striped carton, designed in a bold comic-book pop-art style. The lighting is bright and flat with hard black outlines and vibrant yellow highlights. The aesthetic is clean and high-energy, featuring a cream background and a tactile, ink-trap feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkZsard6eFw-OEY3ysnDxg0Yj9VD50m0E_92L46b4C-hHAzFGezWAHmeOyFALQ4kbJBGCXHldg0oaRSmqfggE6MWrmR3B_k7SbIyhjYTauRgRq_XK4vMFnVH48X_FkV_ZN54Hs7L7FC1nHdMVu9mOh-CbLuIeDo5aD0MctweG8oSjU2rMRksqtJsTas5uCLEJZJrXOsf0H9huYynmGU2dP3x21Urxvcs6iyF8w1KRKornL1GL3R8Q"/>
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md uppercase">Neon Crinkles</h3>
+<span class="font-price-display text-primary">$1</span>
+</div>
+<p class="text-sm text-on-surface-variant font-body-md">Salty, crispy, and perfectly wavy.</p>
+</div>
+<button class="bg-secondary-container border-2 border-border-black py-1 font-display text-md neo-shadow-sm active-press uppercase" data-add-to-cart data-item-id="neon-crinkles" data-item-name="Neon Crinkles" data-item-price="1" data-item-image="https://lh3.googleusercontent.com/aida-public/AB6AXuCkZsard6eFw-OEY3ysnDxg0Yj9VD50m0E_92L46b4C-hHAzFGezWAHmeOyFALQ4kbJBGCXHldg0oaRSmqfggE6MWrmR3B_k7SbIyhjYTauRgRq_XK4vMFnVH48X_FkV_ZN54Hs7L7FC1nHdMVu9mOh-CbLuIeDo5aD0MctweG8oSjU2rMRksqtJsTas5uCLEJZJrXOsf0H9huYynmGU2dP3x21Urxvcs6iyF8w1KRKornL1GL3R8Q" data-item-description="Salty, crispy, and perfectly wavy.">Grab 'em</button>
+</div>
+</div>
+<!-- Fries 2 -->
+<div class="flex bg-white border-3 border-border-black neo-shadow h-48 group">
+<div class="w-1/3 border-r-3 border-border-black overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform" data-alt="Truffle fries sprinkled with parmesan and parsley, presented in a high-contrast pop-art illustration style. The color palette uses deep browns, golds, and cream. Every element has a thick black border and hard, non-diffused shadows, creating a tangible street-culture look that feels modern and energetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXki8KWlICH4draCHVAHCMtvQFlRu5GfdlDgxwI7kHTG0O1eZMAbJP9itRjPIlygclaWpDK4ngl4lNzR1P0CMyfnCSK1Fi-4RBAimCpaVtb64Jd6pukXyX-qaVWB-qb-TMunWba164Ui8_9W6rW8QFRtA--s5k8x4Ub8WG0GhG_GLUSzGPyMA25XgAiBNc5ECPUC4Jv3_5RhqA1mQZnALi0kc7_1OsUqGtSgKOGpI34uUG22hXTCY"/>
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md uppercase">Gold Dust</h3>
+<span class="font-price-display text-primary">$1</span>
+</div>
+<p class="text-sm text-on-surface-variant font-body-md">Truffle oil and parmesan sprinkle.</p>
+</div>
+<button class="bg-secondary-container border-2 border-border-black py-1 font-display text-md neo-shadow-sm active-press uppercase" data-add-to-cart data-item-id="gold-dust" data-item-name="Gold Dust" data-item-price="1" data-item-image="https://lh3.googleusercontent.com/aida-public/AB6AXuDXki8KWlICH4draCHVAHCMtvQFlRu5GfdlDgxwI7kHTG0O1eZMAbJP9itRjPIlygclaWpDK4ngl4lNzR1P0CMyfnCSK1Fi-4RBAimCpaVtb64Jd6pukXyX-qaVWB-qb-TMunWba164Ui8_9W6rW8QFRtA--s5k8x4Ub8WG0GhG_GLUSzGPyMA25XgAiBNc5ECPUC4Jv3_5RhqA1mQZnALi0kc7_1OsUqGtSgKOGpI34uUG22hXTCY" data-item-description="Truffle oil and parmesan sprinkle.">Grab 'em</button>
+</div>
+</div>
+<!-- Fries 3 -->
+<div class="flex bg-white border-3 border-border-black neo-shadow h-48 group">
+<div class="w-1/3 border-r-3 border-border-black overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform" data-alt="Spicy waffle fries with a red seasoning dust, shown in a vibrant neo-brutalist graphic design style. The food pops against a bright cream background with bold black outlines and high-key lighting. The overall feel is playful, loud, and hungry, perfectly matching a modern fast-food brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlFpb0CNAQB7zJuFy50TfanvFdJDEO1y_-2gg4ehsPkpZkwUgL7_s4fV03rcBNdgP4V4P6JKFNeD4nXOooIK9qOtB9P49mbkg8ukQ9Oyt6j5tmpQBHdKyRfZ2O0w2zlci8k_9vxeV6e07yOObAF4AAz13MmuTp2T3LPPBlHMtGlATturxtUAU3VKzcVoS_GGGr0JrfTFAfPMz5sTIJMun-XurP5ELV0trmFGvq1HWRtDYQEDHa_Bk"/>
+</div>
+<div class="w-2/3 p-4 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md uppercase">Radioactive</h3>
+<span class="font-price-display text-primary">$1</span>
+</div>
+<p class="text-sm text-on-surface-variant font-body-md">Hot seasoning that kicks back.</p>
+</div>
+<button class="bg-secondary-container border-2 border-border-black py-1 font-display text-md neo-shadow-sm active-press uppercase" data-add-to-cart data-item-id="radioactive" data-item-name="Radioactive" data-item-price="1" data-item-image="https://lh3.googleusercontent.com/aida-public/AB6AXuAlFpb0CNAQB7zJuFy50TfanvFdJDEO1y_-2gg4ehsPkpZkwUgL7_s4fV03rcBNdgP4V4P6JKFNeD4nXOooIK9qOtB9P49mbkg8ukQ9Oyt6j5tmpQBHdKyRfZ2O0w2zlci8k_9vxeV6e07yOObAF4AAz13MmuTp2T3LPPBlHMtGlATturxtUAU3VKzcVoS_GGGr0JrfTFAfPMz5sTIJMun-XurP5ELV0trmFGvq1HWRtDYQEDHa_Bk" data-item-description="Hot seasoning that kicks back.">Grab 'em</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Section: Drinks (Asymmetric Bento Grid) -->
+<div class="mb-16">
+<div class="flex items-center gap-4 mb-8">
+<h2 class="font-display text-headline-lg bg-tertiary-container text-white px-6 py-2 -rotate-2 border-3 border-border-black neo-shadow-sm">DRINKS</h2>
+<div class="h-1 flex-grow bg-border-black"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-gutter h-auto md:h-[600px]">
+<div class="md:col-span-2 md:row-span-2 bg-white border-3 border-border-black neo-shadow p-6 flex flex-col group">
+<div class="flex-grow overflow-hidden border-3 border-border-black mb-4 relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A tall, condensation-covered glass of vibrant red soda with ice cubes and a striped straw, rendered in a bold pop-art style. The lighting is sharp and high-key, with non-diffused shadows and thick black ink-trap borders. The scene is energetic and refreshing, using a palette of bright red, cool blues, and cream." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuhpV_XEWjti9cY1EofbXl9mDnPmHuX_4a5-dEkYfUjkGY3-pfF0nvHRuj4qTX1cBjY1F62PQHo6hAZWDKrAlA68HhnUcYgNhPTpkBLOSHShlKmrDpb6F3U7Lxf6DChQYJcF7oWmXL8R0Jf7phfUJLJibwhgRWyNCQRZZFYEsiLF2bjfvlF6889zr632_vOM-FJWAG1fc_A28CowFlwcSMIr3DSnUTBv7S0PgRjhY0nd8xqPpH1zc"/>
+<div class="absolute bottom-4 left-4 bg-primary text-white border-3 border-border-black px-4 py-2 font-display text-headline-md">$1</div>
+</div>
+<h3 class="font-headline-lg uppercase mb-2">Turbo Cola</h3>
+<p class="font-body-md">Maximum fizz, zero regrets. The ultimate dopamine hit.</p>
+<button class="mt-4 bg-secondary-container border-3 border-border-black py-4 font-display text-headline-md neo-shadow-sm active-press" data-add-to-cart data-item-id="turbo-cola" data-item-name="Turbo Cola" data-item-price="1" data-item-image="https://lh3.googleusercontent.com/aida-public/AB6AXuCuhpV_XEWjti9cY1EofbXl9mDnPmHuX_4a5-dEkYfUjkGY3-pfF0nvHRuj4qTX1cBjY1F62PQHo6hAZWDKrAlA68HhnUcYgNhPTpkBLOSHShlKmrDpb6F3U7Lxf6DChQYJcF7oWmXL8R0Jf7phfUJLJibwhgRWyNCQRZZFYEsiLF2bjfvlF6889zr632_vOM-FJWAG1fc_A28CowFlwcSMIr3DSnUTBv7S0PgRjhY0nd8xqPpH1zc" data-item-description="Maximum fizz, zero regrets.">POUR ONE UP</button>
+</div>
+<div class="md:col-span-2 bg-surface-variant border-3 border-border-black neo-shadow p-6 flex items-center gap-6 group">
+<div class="w-1/3 h-full border-3 border-border-black overflow-hidden">
+<img class="w-full h-full object-cover group-hover:rotate-12 transition-transform" data-alt="A bright yellow lemon-lime soda in a graphic pop-art style, bursting with bubbles and energy. The image features thick black strokes, high-contrast lighting, and a vibrant color scheme of yellow, lime green, and cream. The mood is zesty and loud, with a distinct comic-book aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNTwvk9MF3O8ILk7ItIvESxHR8J7lcV6A09Xm4oxlBXwVt2uww3_nb-x_Me8fxLLivQ2cp_ZUhlyJ1CNEO7a61CTyc3sVVOcpj_E69Er4yYh8oINEbyeoHqzHpCTRDDcTEyi6j1jcWDPyqBiQ3j6_BJ7UnyoWFSmVBxVstXf5Wg9YsKEJl981rNbS4OTTOUQRxbNYJSfbcPwVZqBFq4yhckOSHZnF2RvX3ZNY8E0AL1bLq89gviXU"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline-md uppercase">Zest Bomb</h3>
+<p class="text-sm font-body-md mb-2">Liquid sunshine for your taste buds.</p>
+<span class="font-price-display text-primary block mb-3">$1.00</span>
+<button class="bg-border-black text-white px-4 py-2 font-display text-sm neo-shadow-sm active-press" data-add-to-cart data-item-id="zest-bomb" data-item-name="Zest Bomb" data-item-price="1" data-item-image="https://lh3.googleusercontent.com/aida-public/AB6AXuCNTwvk9MF3O8ILk7ItIvESxHR8J7lcV6A09Xm4oxlBXwVt2uww3_nb-x_Me8fxLLivQ2cp_ZUhlyJ1CNEO7a61CTyc3sVVOcpj_E69Er4yYh8oINEbyeoHqzHpCTRDDcTEyi6j1jcWDPyqBiQ3j6_BJ7UnyoWFSmVBxVstXf5Wg9YsKEJl981rNbS4OTTOUQRxbNYJSfbcPwVZqBFq4yhckOSHZnF2RvX3ZNY8E0AL1bLq89gviXU" data-item-description="Liquid sunshine for your taste buds.">ADD</button>
+</div>
+</div>
+<div class="md:col-span-1 bg-white border-3 border-border-black neo-shadow p-4 flex flex-col group">
+<div class="h-24 overflow-hidden mb-2 border-2 border-border-black">
+<img class="w-full h-full object-cover group-hover:scale-125 transition-transform" data-alt="A creamy chocolate milkshake with a cherry on top in a retro pop-art style. The image uses rich browns and deep reds with high-contrast lighting and hard black outlines. The style is unapologetically bold and energetic, set against a cream background with a comic-book texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCi_-J8CQ0dajgAMmp_B-MBMrjYukKZCEV1fCucbXF87ToIyrWKO3Vas8W-C5jdUEzm52Z-GsUxEW1mplWk3tom0hEiewQZxk8bsex7y_20idS8aQQLrwgGU853ja_xqfBmzIEhYdzNp7bxhXVYQXW5Fj-XER2y-jYpYDPECWyiSgwEAE29jM5rPMEGInP7sWXP9Od82M9yuAeZFexD666MArvuXmWllxb1VJqAjJvlSz0OPjfSVI"/>
+</div>
+<h4 class="font-headline-md text-sm uppercase">Cocoa Cloud</h4>
+<span class="font-price-display text-primary">$1</span>
+<button class="mt-2 bg-primary-container text-white py-1 text-xs font-display neo-shadow-sm active-press" data-add-to-cart data-item-id="cocoa-cloud" data-item-name="Cocoa Cloud" data-item-price="1" data-item-image="https://lh3.googleusercontent.com/aida-public/AB6AXuBCi_-J8CQ0dajgAMmp_B-MBMrjYukKZCEV1fCucbXF87ToIyrWKO3Vas8W-C5jdUEzm52Z-GsUxEW1mplWk3tom0hEiewQZxk8bsex7y_20idS8aQQLrwgGU853ja_xqfBmzIEhYdzNp7bxhXVYQXW5Fj-XER2y-jYpYDPECWyiSgwEAE29jM5rPMEGInP7sWXP9Od82M9yuAeZFexD666MArvuXmWllxb1VJqAjJvlSz0OPjfSVI" data-item-description="Creamy chocolate milkshake.">GLUG</button>
+</div>
+<div class="md:col-span-1 bg-white border-3 border-border-black neo-shadow p-4 flex flex-col group">
+<div class="h-24 overflow-hidden mb-2 border-2 border-border-black">
+<img class="w-full h-full object-cover group-hover:scale-125 transition-transform" data-alt="Iced coffee with swirling cream and ice, designed in a modern pop-art aesthetic. Bold black ink borders, vibrant brown and cream colors, and high-key lighting. The image feels tangible and graphic, with a high-energy dopamine-rich vibe suitable for a playful food brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDg3n1iPQJ4-ERcmxjR9nS0Nzu8h9fKPuqXTdfdIXLO9HOtNzoaLgHARsm6bBR6hrh7qcxf23b5z966lfzv942dOqPjI8vqN2Lm8GkQ1Uemq-u3F8AhsUD6awjb_q7TBOB5kalphAePH5FyBKGq6BNUixbprKU_KeFkoxQO53mT-WMljmMA43Xs1z9-8wA76k1KGELAUA6cskQF93hii8cl3If8jYDVtVTm8636nSqgfaxPzl2_GtM"/>
+</div>
+<h4 class="font-headline-md text-sm uppercase">Iced Shook</h4>
+<span class="font-price-display text-primary">$1</span>
+<button class="mt-2 bg-primary-container text-white py-1 text-xs font-display neo-shadow-sm active-press" data-add-to-cart data-item-id="iced-shook" data-item-name="Iced Shook" data-item-price="1" data-item-image="https://lh3.googleusercontent.com/aida-public/AB6AXuDg3n1iPQJ4-ERcmxjR9nS0Nzu8h9fKPuqXTdfdIXLO9HOtNzoaLgHARsm6bBR6hrh7qcxf23b5z966lfzv942dOqPjI8vqN2Lm8GkQ1Uemq-u3F8AhsUD6awjb_q7TBOB5kalphAePH5FyBKGq6BNUixbprKU_KeFkoxQO53mT-WMljmMA43Xs1z9-8wA76k1KGELAUA6cskQF93hii8cl3If8jYDVtVTm8636nSqgfaxPzl2_GtM" data-item-description="Iced coffee with swirling cream.">GLUG</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-background-cream dark:bg-inverse-surface border-t-3 border-border-black flex justify-around items-center px-4 py-2">
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container border-3 border-border-black shadow-[4px_4px_0px_0px_rgba(36,22,8,1)] rounded-DEFAULT p-2 scale-90" href="Full menu.html">
+<span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="font-body-md text-body-md font-bold">Menu</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant active:scale-95 transition-transform" href="cart.html">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-body-md text-body-md font-bold text-[10px]">Stash</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant active:scale-95 transition-transform" href="Main Page.html#why-us">
+<span class="material-symbols-outlined" data-icon="local_fire_department">local_fire_department</span>
+<span class="font-body-md text-body-md font-bold text-[10px]">Deals</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant active:scale-95 transition-transform" href="Main Page.html#contact">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-body-md text-body-md font-bold text-[10px]">Profile</span>
+</a>
+</nav>
+<!-- Cart FAB (Contextual) -->
+<a class="fixed right-6 bottom-24 md:bottom-12 bg-primary-container border-3 border-border-black p-4 neo-shadow active-press z-40" href="cart.html">
+<div class="relative">
+<span class="material-symbols-outlined text-white text-3xl" data-icon="shopping_cart">shopping_cart</span>
+<span class="hidden absolute -top-2 -right-2 bg-secondary-container text-border-black border-2 border-border-black text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full" data-cart-count>0</span>
+</div>
+</a>
+<script src="cart.js"></script>
+<script>
+        // Micro-interactions
+        document.querySelectorAll('.active-press').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'translate(4px, 4px)';
+                button.style.boxShadow = '0px 0px 0px 0px rgba(36,22,8,1)';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = 'translate(0px, 0px)';
+                button.style.boxShadow = '';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = 'translate(0px, 0px)';
+                button.style.boxShadow = '';
+            });
+        });
+
+        // Sticky Header effect on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.style.backgroundColor = '#FFF6E5';
+            }
+        });
+    </script>
+</body></html>
