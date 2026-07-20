@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { syncOrderToGoogleSheets } from '../lib/integrations/googleSheets';
+import { appendOrderToGoogleSheets } from '../lib/integrations/googleSheets';
 import { processOrderNotifications } from '../lib/orders/processNotifications';
 import { toStoredOrder } from '../lib/orders/toStoredOrder';
 import { saveOrder, updateOrder } from '../lib/storage';
@@ -75,7 +75,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     });
   }
 
-  await syncOrderToGoogleSheets(storedOrder, 'created');
+  await appendOrderToGoogleSheets(storedOrder);
 
   sendJson(res, 200, {
     success: true,

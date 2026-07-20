@@ -4,6 +4,7 @@ import {
   formatOrderForGoogleSheets,
   isGoogleSheetsConfigured
 } from '../lib/integrations/googleSheets';
+import { isGoogleSheetsServiceConfigured } from '../lib/services/googleSheetsService';
 import type { StoredOrder } from '../lib/types/stored-order';
 
 const sampleOrder: StoredOrder = {
@@ -13,7 +14,7 @@ const sampleOrder: StoredOrder = {
   customer: {
     name: 'Ali',
     phone: '03245972524',
-    address: 'Karachi'
+    address: 'Block 5, Clifton, Karachi'
   },
   items: [
     {
@@ -22,14 +23,21 @@ const sampleOrder: StoredOrder = {
       quantity: 2,
       unitPrice: 1,
       lineTotal: 2
+    },
+    {
+      productId: 'inferno-chicken',
+      name: 'Inferno Chicken',
+      quantity: 1,
+      unitPrice: 1,
+      lineTotal: 1
     }
   ],
-  subtotal: 2,
+  subtotal: 3,
   deliveryFee: 0,
-  total: 2,
+  total: 3,
   paymentMethod: 'Cash on Delivery',
   notes: 'Extra sauce',
-  status: 'confirmed',
+  status: 'received',
   source: 'checkout',
   notifications: {
     business: { status: 'not_configured' },
@@ -37,36 +45,57 @@ const sampleOrder: StoredOrder = {
   }
 };
 
-test('google sheets sync is skipped when webhook is not configured', function () {
+function clearGoogleSheetsEnv(): void {
+  delete process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
+  delete process.env.GOOGLE_SHEETS_CLIENT_EMAIL;
+  delete process.env.GOOGLE_SHEETS_PRIVATE_KEY;
+  delete process.env.GOOGLE_SHEETS_SHEET_NAME;
   delete process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+}
+
+test('google sheets sync is skipped when service account is not configured', function () {
+  clearGoogleSheetsEnv();
+  assert.equal(isGoogleSheetsServiceConfigured(), false);
   assert.equal(isGoogleSheetsConfigured(), false);
 });
 
-test('google sheets sync is enabled when webhook is configured', function () {
-  process.env.GOOGLE_SHEETS_WEBHOOK_URL = 'https://script.google.com/macros/s/example/exec';
+test('google sheets sync is enabled when service account env vars exist', function () {
+  clearGoogleSheetsEnv();
+  process.env.GOOGLE_SHEETS_SPREADSHEET_ID = 'sheet-id';
+  process.env.GOOGLE_SHEETS_CLIENT_EMAIL = 'service-account@project.iam.gserviceaccount.com';
+  process.env.GOOGLE_SHEETS_PRIVATE_KEY = '-----BEGIN PRIVATE KEY-----\\nabc\\n-----END PRIVATE KEY-----';
+
+  assert.equal(isGoogleSheetsServiceConfigured(), true);
   assert.equal(isGoogleSheetsConfigured(), true);
-  delete process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+
+  clearGoogleSheetsEnv();
 });
 
-test('formatOrderForGoogleSheets includes status and item summary', function () {
+test('formatOrderForGoogleSheets maps required columns', function () {
   const row = formatOrderForGoogleSheets(sampleOrder);
 
   assert.equal(row.orderId, 'ORD-20260720-TEST01');
-  assert.equal(row.status, 'confirmed');
   assert.equal(row.customerName, 'Ali');
-  assert.match(row.items, /2 x Double Dollar Smash/);
-  assert.equal(row.notes, 'Extra sauce');
+  assert.equal(row.phoneNumber, '03245972524');
+  assert.equal(row.address, 'Block 5, Clifton');
+  assert.equal(row.city, 'Karachi');
+  assert.equal(row.orderedItems, 'Double Dollar Smash, Inferno Chicken');
+  assert.equal(row.quantity, 3);
+  assert.equal(row.totalAmount, 3);
+  assert.equal(row.paymentMethod, 'Cash on Delivery');
+  assert.equal(row.orderStatus, 'received');
+  assert.match(row.date, /^\d{2}\/\d{2}\/\d{4}$/);
+  assert.match(row.time, /^\d{2}:\d{2}:\d{2}$/);
 });
 
 test('formatOrderForGoogleSheets does not expose secrets', function () {
   process.env.ADMIN_PASSWORD = 'secret-value';
-  process.env.ADMIN_SESSION_SECRET = 'session-secret';
+  process.env.GOOGLE_SHEETS_PRIVATE_KEY = 'private-key-value';
 
   const serialized = JSON.stringify(formatOrderForGoogleSheets(sampleOrder));
-  assert.equal(serialized.includes('ADMIN_PASSWORD'), false);
   assert.equal(serialized.includes('secret-value'), false);
-  assert.equal(serialized.includes('session-secret'), false);
+  assert.equal(serialized.includes('private-key-value'), false);
 
   delete process.env.ADMIN_PASSWORD;
-  delete process.env.ADMIN_SESSION_SECRET;
+  delete process.env.GOOGLE_SHEETS_PRIVATE_KEY;
 });
