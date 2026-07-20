@@ -4,7 +4,7 @@ import { getOrderBlobPath } from './paths';
 
 async function readOrderFromPathname(pathname: string): Promise<StoredOrder | null> {
   try {
-    const result = await get(pathname, { access: 'private' });
+    const result = await get(pathname, { access: 'private', useCache: false });
 
     if (!result || result.statusCode !== 200 || !result.stream) {
       return null;
