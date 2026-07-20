@@ -1,4 +1,6 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": ".",
   "rewrites": [
     { "source": "/", "destination": "/Main Page.html" },
     { "source": "/menu", "destination": "/Full menu.html" },
