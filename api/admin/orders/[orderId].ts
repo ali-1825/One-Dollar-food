@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { isValidOrderStatus, toAdminOrderDetail } from '../../../lib/admin/orders';
 import { requireAdminSession } from '../../../lib/auth/requireAdmin';
+import { syncOrderToGoogleSheets } from '../../../lib/integrations/googleSheets';
 import { getOrderById, updateOrder } from '../../../lib/storage';
 import type { OrderStatus } from '../../../lib/types/stored-order';
 
@@ -66,6 +67,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       order.status = requestedStatus as OrderStatus;
       order.updatedAt = new Date().toISOString();
       const updated = await updateOrder(order);
+      await syncOrderToGoogleSheets(updated, 'updated');
 
       res.status(200).json({
         success: true,
