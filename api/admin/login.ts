@@ -6,7 +6,10 @@ import {
   recordFailedLogin,
   validateAdminCredentials
 } from '../../lib/auth/credentials';
-import { parseLoginBody } from '../../lib/auth/parseLoginBody';
+import {
+  parseLoginJson,
+  readLoginRequestBody
+} from '../../lib/auth/parseLoginBody';
 import { setNoStoreHeaders } from '../../lib/auth/requireAdmin';
 import {
   buildSessionCookie,
@@ -23,6 +26,12 @@ function sendLoginError(
   console.info('[admin-login] completed', { branch, statusCode });
   res.status(statusCode).json({ success: false, error: message });
 }
+
+export const config = {
+  api: {
+    bodyParser: false
+  }
+};
 
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
   setNoStoreHeaders(res);
@@ -45,7 +54,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
       return;
     }
 
-    const parsed = parseLoginBody(req);
+    const rawBody = await readLoginRequestBody(req);
+    const parsed = parseLoginJson(rawBody);
     if (parsed.malformed) {
       sendLoginError(res, 400, 'malformed-body', 'Invalid login request.');
       return;

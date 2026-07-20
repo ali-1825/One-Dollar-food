@@ -8,6 +8,7 @@ import {
   validateAdminCredentials
 } from '../lib/auth/credentials';
 import {
+  buildSessionCookie,
   createSessionToken,
   getSessionFromCookieHeader,
   verifySessionToken
@@ -84,6 +85,20 @@ test('configured production credentials work when insecure mode is disabled', fu
 
   assert.equal(validateAdminCredentials('dashboard-admin', 'StrongPassword123!'), true);
   assert.equal(validateAdminCredentials('admin', 'admin'), false);
+});
+
+test('production session cookie is secure on Vercel', function () {
+  process.env.VERCEL_ENV = 'production';
+  delete process.env.NODE_ENV;
+
+  const cookie = buildSessionCookie('sample.token.value');
+  assert.match(cookie, /^admin_session=/);
+  assert.match(cookie, /;\s*Secure(?:;|$)/);
+  assert.match(cookie, /;\s*HttpOnly(?:;|$)/);
+  assert.match(cookie, /;\s*SameSite=Lax(?:;|$)/);
+  assert.match(cookie, /;\s*Path=\/(?:;|$)/);
+
+  delete process.env.VERCEL_ENV;
 });
 
 test('order listing shape does not expose secrets', function () {

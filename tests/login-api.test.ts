@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { parseLoginBody } from '../lib/auth/parseLoginBody';
+import { parseLoginBody, parseLoginJson } from '../lib/auth/parseLoginBody';
 
 test('parseLoginBody parses JSON objects', function () {
   const result = parseLoginBody({
@@ -25,5 +25,15 @@ test('parseLoginBody rejects malformed JSON', function () {
     body: '{not-json'
   } as never);
 
+  assert.equal(result.malformed, true);
+});
+
+test('parseLoginJson rejects malformed JSON', function () {
+  const result = parseLoginJson('{not-json');
+  assert.equal(result.malformed, true);
+});
+
+test('parseLoginJson rejects JSON arrays', function () {
+  const result = parseLoginJson('[]');
   assert.equal(result.malformed, true);
 });
