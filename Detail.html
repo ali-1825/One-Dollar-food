@@ -192,7 +192,7 @@
 <!-- Content Column -->
 <div class="flex flex-col gap-8">
 <div>
-<h1 class="font-display text-display md:text-headline-lg text-on-background mb-4">Classic Beef Burger</h1>
+<h1 class="font-display text-headline-lg-mobile md:text-headline-lg text-on-background mb-4">Classic Beef Burger</h1>
 <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
                         Double stacked, juicy beef with special sauce. Our signature patty is smashed to perfection on a vintage iron griddle, creating that crispy edge you crave.
                     </p>
@@ -337,13 +337,7 @@
             return options;
         }
 
-        addBtn.addEventListener('mousedown', () => {
-            addBtn.classList.add('neo-shadow-active');
-        });
-
-        addBtn.addEventListener('mouseup', () => {
-            addBtn.classList.remove('neo-shadow-active');
-
+        addBtn.addEventListener('click', function () {
             const options = getSelectedOptions();
             const hasBacon = document.getElementById('bacon').checked;
             const price = hasBacon ? 1.5 : 1;
@@ -363,14 +357,11 @@
             addBtn.classList.remove('bg-primary');
             addBtn.classList.add('bg-tertiary');
 
-            setTimeout(() => {
+            setTimeout(function () {
                 addBtn.innerHTML = originalText;
                 addBtn.classList.add('bg-primary');
                 addBtn.classList.remove('bg-tertiary');
             }, 2000);
-        });
-        addBtn.addEventListener('mouseleave', () => {
-            addBtn.classList.remove('neo-shadow-active');
         });
     </script>
 </body></html>

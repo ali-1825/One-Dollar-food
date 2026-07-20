@@ -146,7 +146,7 @@
         }
     </style>
 </head>
-<body class="bg-background-cream text-on-background font-body-md">
+<body class="bg-background-cream text-on-background font-body-md overflow-x-hidden">
 <!-- Top-Right Dollar-Meter -->
 <div class="fixed top-24 right-6 z-[60] flex flex-col items-center gap-2 group pointer-events-none md:pointer-events-auto" id="dollarMeter">
 <div class="bg-secondary-container border-[3px] border-black brutalist-shadow rounded-full p-4 transform transition-transform duration-300 group-hover:scale-110">
@@ -177,10 +177,19 @@
 <span class="material-symbols-outlined">shopping_bag</span>
 <span class="hidden absolute -top-2 -right-2 bg-primary text-white border-2 border-black text-[10px] font-bold h-5 w-5 flex items-center justify-center rounded-full" data-cart-count>0</span>
 </a>
-<button class="md:hidden p-2 border-[3px] border-black rounded-lg brutalist-shadow-sm bg-white">
+<button aria-controls="mobile-menu-panel" aria-expanded="false" class="md:hidden p-2 border-[3px] border-black rounded-lg brutalist-shadow-sm bg-white" id="mobile-menu-btn" type="button">
 <span class="material-symbols-outlined">menu</span>
 </button>
 </nav>
+<div class="md:hidden hidden fixed top-[76px] left-0 right-0 z-40 bg-background-cream border-b-[3px] border-black shadow-[6px_6px_0px_0px_rgba(36,22,8,1)]" id="mobile-menu-panel">
+<div class="flex flex-col gap-2 p-4">
+<a class="font-body-md py-3 px-4 border-[3px] border-black bg-white brutalist-shadow-sm" href="/menu">Menu</a>
+<a class="font-body-md py-3 px-4 border-[3px] border-black bg-white brutalist-shadow-sm" href="/stash">Stash</a>
+<a class="font-body-md py-3 px-4 border-[3px] border-black bg-white brutalist-shadow-sm" href="#why-us">Why Us</a>
+<a class="font-body-md py-3 px-4 border-[3px] border-black bg-white brutalist-shadow-sm" href="#contact">Contact</a>
+<a class="font-body-md py-3 px-4 border-[3px] border-black bg-primary text-white brutalist-shadow-sm text-center" href="/menu">Order Now</a>
+</div>
+</div>
 <!-- Hero Section -->
 <section class="pt-32 pb-16 px-gutter md:px-margin-desktop overflow-hidden">
 <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12">
@@ -369,7 +378,7 @@
 </div>
 <input autocomplete="off" class="hidden" id="home-order-honeypot" name="_honeypot" tabindex="-1" type="text"/>
 <div class="flex flex-col items-center">
-<button class="w-full md:w-auto min-w-[300px] bg-tertiary-container text-white font-display text-2xl py-6 px-12 rounded-full border-[4px] border-black brutalist-shadow active-press transition-all flex items-center justify-center gap-4 group" id="home-order-submit" type="submit">
+<button class="w-full md:w-auto min-w-0 md:min-w-[300px] bg-tertiary-container text-white font-display text-2xl py-6 px-12 rounded-full border-[4px] border-black brutalist-shadow active-press transition-all flex items-center justify-center gap-4 group" id="home-order-submit" type="submit">
                         ORDER NOW
                         <span class="material-symbols-outlined text-3xl group-hover:translate-x-2 transition-transform">arrow_forward</span>
 </button>
@@ -411,7 +420,7 @@
 </section>
 <!-- Footer -->
 <footer class="bg-surface-container-highest border-t-[3px] border-black w-full">
-<div class="flex flex-col md:flex-row justify-between items-start md:items-center px-margin-desktop py-12 w-full gap-8">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center px-margin-mobile md:px-margin-desktop py-12 w-full gap-8">
 <div class="flex items-center gap-4">
 <img alt="Dollars Food Logo" class="w-10 h-10 rounded-full border-[2px] border-black" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbihjPNWrcND3B9kuhSIKMJUkgUpUa9W_FjzaDYd98W_RyAi3EStylb9tWFp15jT4wZYaqGXEFgt0Cix8CJRojS1Jsrpe5N_yIaU1HP53OGdc3wTOoxInWt-QKWUTFAKH-b9thG4GRg9WVjljLrc16sSl_JHvOab1mzZU_COSWb3YdofVogo81DwYPOAQyStz8gqEfcYDnq8fY3JL88yp-4z9X6LreYl9D8-0fyhD0bQz50CnhuYE"/>
 <span class="font-display text-headline-md text-primary">Dollars Food</span>

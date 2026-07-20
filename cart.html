@@ -135,7 +135,7 @@
 </head>
 <body class="font-body-md bg-background-cream min-h-screen">
 <!-- Top AppBar -->
-<header class="w-full sticky top-0 z-50 bg-background-cream border-b-3 border-border-black shadow-[6px_6px_0px_0px_rgba(36,22,8,1)] flex justify-between items-center px-margin-mobile h-20">
+<header class="w-full sticky top-0 z-50 bg-background-cream border-b-3 border-border-black shadow-[6px_6px_0px_0px_rgba(36,22,8,1)] flex justify-between items-center px-margin-mobile md:px-margin-desktop h-20">
 <a class="font-display text-headline-lg-mobile font-extrabold text-primary -rotate-2" href="Main Page.html">DOLLARS FOOD</a>
 <div class="flex items-center gap-4">
 <a class="neo-brutalist-btn bg-secondary-container p-2 rounded-DEFAULT flex items-center justify-center relative" href="cart.html">
@@ -153,9 +153,9 @@
 </div>
 </main>
 <!-- Cart Overlay / Side Panel -->
-<div class="fixed inset-0 z-[100] flex justify-end" id="cart-overlay">
+<div class="fixed inset-0 z-[100] flex justify-end" id="cart-overlay" role="dialog" aria-modal="true" aria-label="Your stash">
 <!-- Backdrop -->
-<div class="absolute inset-0 bg-border-black/40 backdrop-blur-sm"></div>
+<div class="absolute inset-0 bg-border-black/40 backdrop-blur-sm cursor-pointer" id="cart-backdrop"></div>
 <!-- Panel -->
 <div class="relative w-full max-w-md h-full bg-background-cream border-l-3 border-border-black flex flex-col shadow-[-10px_0px_0px_0px_rgba(36,22,8,1)]">
 <!-- Header -->
@@ -190,7 +190,7 @@
 <span class="font-display text-headline-md text-primary" id="cart-total">$0.00</span>
 </div>
 </div>
-<a class="neo-brutalist-btn w-full py-5 bg-primary text-white font-display text-headline-md flex items-center justify-center gap-3 opacity-50 pointer-events-none" href="checkout.html" id="checkout-btn">
+<a class="neo-brutalist-btn w-full py-5 bg-primary text-white font-display text-headline-md flex items-center justify-center gap-3 opacity-50 pointer-events-none" href="/checkout" id="checkout-btn">
                     CHECKOUT NOW
                     <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
 </a>
@@ -198,7 +198,7 @@
 </div>
 </div>
 <!-- Mobile Navigation Shell -->
-<nav class="md:hidden fixed bottom-0 w-full z-50 bg-background-cream border-t-3 border-border-black flex justify-around items-center px-4 py-2">
+<nav class="md:hidden hidden fixed bottom-0 w-full z-40 bg-background-cream border-t-3 border-border-black flex justify-around items-center px-4 py-2" aria-hidden="true">
 <a class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:bg-surface-variant" href="Full menu.html">
 <span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
 <span class="font-body-md text-body-md font-bold">Menu</span>
@@ -219,9 +219,4 @@
 <script src="site-config.js"></script>
 <script src="cart.js" defer></script>
 <script src="perf.js" defer></script>
-<script defer>
-        document.getElementById('close-cart').addEventListener('click', () => {
-            window.location.href = 'Full menu.html';
-        });
-    </script>
 </body></html>
