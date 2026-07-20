@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Admin Login | DOLLARS FOOD</title>
-<link href="../perf.css" rel="stylesheet"/>
+<link href="/perf.css" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Poppins:wght@400;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet"/>
 <script>
@@ -48,35 +48,6 @@ tailwind.config = {
 <p aria-live="polite" class="text-error text-sm min-h-[20px] mt-4" id="login-status" role="alert"></p>
 </form>
 </main>
-<script src="admin.js"></script>
-<script>
-(function () {
-  var admin = window.DollarsFoodAdmin;
-  var form = document.getElementById('login-form');
-  var statusEl = document.getElementById('login-status');
-  var loginBtn = document.getElementById('login-btn');
-
-  form.addEventListener('submit', async function (event) {
-    event.preventDefault();
-    if (loginBtn.disabled) return;
-
-    admin.setText(statusEl, 'Signing in...');
-    loginBtn.disabled = true;
-
-    var result = await admin.postJson('/api/admin/login', {
-      username: document.getElementById('username').value.trim(),
-      password: document.getElementById('password').value
-    });
-
-    if (result.ok && result.data.success) {
-      window.location.href = '/admin/orders';
-      return;
-    }
-
-    admin.setText(statusEl, result.data.error || 'Invalid username or password.');
-    loginBtn.disabled = false;
-  });
-})();
-</script>
+<script src="/admin/admin.js"></script>
 </body>
 </html>

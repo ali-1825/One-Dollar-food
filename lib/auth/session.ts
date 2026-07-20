@@ -107,7 +107,10 @@ export function getSessionCookieName(): string {
 }
 
 export function buildSessionCookie(token: string): string {
-  const secure = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
+  const secure =
+    process.env.NODE_ENV === 'production' ||
+    process.env.VERCEL_ENV === 'production' ||
+    process.env.VERCEL === '1';
   const parts = [
     `${SESSION_COOKIE_NAME}=${encodeURIComponent(token)}`,
     'Path=/',
@@ -124,7 +127,10 @@ export function buildSessionCookie(token: string): string {
 }
 
 export function buildClearSessionCookie(): string {
-  const secure = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1';
+  const secure =
+    process.env.NODE_ENV === 'production' ||
+    process.env.VERCEL_ENV === 'production' ||
+    process.env.VERCEL === '1';
   const parts = [
     `${SESSION_COOKIE_NAME}=`,
     'Path=/',

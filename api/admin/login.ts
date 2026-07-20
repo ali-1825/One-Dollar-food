@@ -6,61 +6,83 @@ import {
   recordFailedLogin,
   validateAdminCredentials
 } from '../../lib/auth/credentials';
+import { parseLoginBody } from '../../lib/auth/parseLoginBody';
+import { setNoStoreHeaders } from '../../lib/auth/requireAdmin';
 import {
   buildSessionCookie,
   createSessionToken,
   isInsecureAdminEnabled
 } from '../../lib/auth/session';
-import { setNoStoreHeaders } from '../../lib/auth/requireAdmin';
 
-function readBody(req: VercelRequest): { username?: string; password?: string } {
-  if (req.body && typeof req.body === 'object') {
-    return req.body as { username?: string; password?: string };
-  }
-
-  return {};
+function sendLoginError(
+  res: VercelResponse,
+  statusCode: number,
+  branch: string,
+  message: string
+): void {
+  console.info('[admin-login] completed', { branch, statusCode });
+  res.status(statusCode).json({ success: false, error: message });
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
   setNoStoreHeaders(res);
 
+  if (req.method === 'OPTIONS') {
+    res.status(204).end();
+    return;
+  }
+
   if (req.method !== 'POST') {
-    res.status(405).json({ success: false, error: 'Method not allowed.' });
+    sendLoginError(res, 405, 'method-not-allowed', 'Method not allowed.');
     return;
   }
 
-  const ip = getClientIp(req.headers);
-  if (isLoginRateLimited(ip)) {
-    res.status(429).json({ success: false, error: 'Invalid username or password.' });
-    return;
+  try {
+    const ip = getClientIp(req.headers);
+
+    if (isLoginRateLimited(ip)) {
+      sendLoginError(res, 401, 'rate-limited', 'Invalid username or password.');
+      return;
+    }
+
+    const parsed = parseLoginBody(req);
+    if (parsed.malformed) {
+      sendLoginError(res, 400, 'malformed-body', 'Invalid login request.');
+      return;
+    }
+
+    const username = String(parsed.body.username || '').trim();
+    const password = String(parsed.body.password || '');
+
+    if (!username || !password) {
+      recordFailedLogin(ip);
+      sendLoginError(res, 400, 'missing-credentials', 'Invalid login request.');
+      return;
+    }
+
+    if (!validateAdminCredentials(username, password)) {
+      recordFailedLogin(ip);
+      sendLoginError(res, 401, 'invalid-credentials', 'Invalid username or password.');
+      return;
+    }
+
+    const token = createSessionToken(username);
+    if (!token) {
+      sendLoginError(res, 500, 'session-not-configured', 'Admin session is not configured.');
+      return;
+    }
+
+    clearLoginAttempts(ip);
+    res.setHeader('Set-Cookie', buildSessionCookie(token));
+    console.info('[admin-login] completed', { branch: 'success', statusCode: 200 });
+    res.status(200).json({
+      success: true,
+      insecureMode: isInsecureAdminEnabled()
+    });
+  } catch (error) {
+    console.error('[admin-login] unexpected error', {
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
+    sendLoginError(res, 500, 'unexpected-error', 'Admin login is temporarily unavailable.');
   }
-
-  const body = readBody(req);
-  const username = String(body.username || '').trim();
-  const password = String(body.password || '');
-
-  if (!username || !password) {
-    recordFailedLogin(ip);
-    res.status(401).json({ success: false, error: 'Invalid username or password.' });
-    return;
-  }
-
-  if (!validateAdminCredentials(username, password)) {
-    recordFailedLogin(ip);
-    res.status(401).json({ success: false, error: 'Invalid username or password.' });
-    return;
-  }
-
-  const token = createSessionToken(username);
-  if (!token) {
-    res.status(500).json({ success: false, error: 'Admin session is not configured.' });
-    return;
-  }
-
-  clearLoginAttempts(ip);
-  res.setHeader('Set-Cookie', buildSessionCookie(token));
-  res.status(200).json({
-    success: true,
-    insecureMode: isInsecureAdminEnabled()
-  });
 }
